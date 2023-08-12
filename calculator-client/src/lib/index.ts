@@ -1,2 +1,2 @@
-export * from './math-expression-validator'
+export * from './math-expression-calculator'
 export * as storages from './browser-local-storage'

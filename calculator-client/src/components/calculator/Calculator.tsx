@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import './Calculator.css';
-import mathCalculate from "../../lib/math-expression-validator";
+import mathCalculate from "../../lib/math-expression-calculator";
 import { CalculationsHistoryStore } from "../../lib/browser-local-storage";
 
 const buttonsSchema = [
