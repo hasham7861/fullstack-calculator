@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-import './Calculator.css'
+import './Calculator.css';
 import mathCalculate from "../../lib/math-expression-validator";
+import { CalculationsHistoryStore } from "../../lib/browser-local-storage";
 
 const buttonsSchema = [
   ['1', '2', '3', '+'],
@@ -18,6 +19,7 @@ const evaluateMathExpression = (expression: string): number => {
 
 }
 
+const calculationStore = new CalculationsHistoryStore()
 export const Calculator = () => {
   const [input, setInput] = useState('');
   const [memoryFunctionState, setMemoryFunctionState] = useState(0);
@@ -32,14 +34,14 @@ export const Calculator = () => {
     try {
       const calculatedResult = evaluateMathExpression(input);
       setInput(calculatedResult.toString())
+      calculationStore.setItem(input)
+      calculationStore.resetCursorToLastPosition()
     } catch (error) {
-      console.log(error)
       setInput('Error')
     }
   };
 
   const handleClearInput = () => {
-    //TODO: in future save the result in webstorage and user history
     setInput('')
   }
 
@@ -47,6 +49,15 @@ export const Calculator = () => {
     setInput((prevInput) => prevInput.slice(0, -1))
   }
 
+  const handlePrev = () => {
+    const prevItem = calculationStore.getPreviousItem()
+    prevItem !== undefined && setInput(prevItem)
+  }
+
+  const handleNext = () => {
+    const nextItem = calculationStore.getNextItem()
+    nextItem !== undefined && setInput(nextItem)
+  }
 
   const handleMemoryFunctionState = (value: string) => {
     switch (value) {
@@ -64,7 +75,6 @@ export const Calculator = () => {
         break;
       default:
         throw new Error('Invalid memory function')
-        break;
     }
   }
   return (
@@ -74,6 +84,10 @@ export const Calculator = () => {
         <button onClick={handleClearInput}>AC</button>
         <button onClick={handleRedo}>Del</button>
         <button onClick={handleCalculate}>=</button>
+      </div>
+      <div className="history-buttons">
+        <button onClick={handlePrev}>prev</button>
+        <button onClick={handleNext}>next</button>
       </div>
       <div className="buttons">
         {

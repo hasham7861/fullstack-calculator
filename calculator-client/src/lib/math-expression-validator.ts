@@ -1,7 +1,7 @@
 /* NOTE: This is a homemade math expression calculator. 
-In real world I would use a prominent math library to parse the expressions properly. 
+In real world I would use a prominent math library to parse the expressions or contribute to existing one overtime.
 However my assumption from the assignment is that we can't use any packages for core functionality, 
-hence the homemade parser. Also I tried my best to cover edge cases that I could see.
+hence the homemade parser. Also I tried my best to cover edge cases that I could come across
 I evaluated this parser based on the possible test cases I came up with on the bottom  
 */
 
