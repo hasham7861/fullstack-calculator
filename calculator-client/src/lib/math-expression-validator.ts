@@ -1,24 +1,38 @@
 // TODO: Refactor this RPN code to have proper typing and smaller functions to make it easy to read.
 
-// type OperatorType = '+' | '-' | '*' | '/' | '%' | '^' | '√'
+type OperatorType = '+' | '-' | '*' | '/' | '%' | '^' | '√'
+type OperatorPrecedence = 1 | 2 | 3 | 4
 
-export default function processMathExpression(input) {
-    const operators = {
-      '+': 1,
-      '-': 1,
-      '*': 2,
-      '/': 2,
-      '^': 3,
-      '%': 2,
-      '√': 4,
-    };
-  
-    function infixToPostfix(tokens) {
-      const outputQueue = [];
-      const operatorStack = [];
+const operators : Record<OperatorType, OperatorPrecedence> = {
+  '+': 1,
+  '-': 1,
+  '*': 2,
+  '/': 2,
+  '^': 3,
+  '%': 2,
+  '√': 4,
+};
+
+const isNumber = (input: string): boolean => {
+    // This regex assumes we already extract the + or minus sign away from number
+    const numberPattern = /^\d+(\.\d+)?$/;
+    return numberPattern.test(input);
+}
+
+const DIGITS_AND_OPERATORS_REGEX = /(\d+(\.\d+)?|\+|-|\*|\/|\^|%|√|\(|\))/g;
+
+export default function processMathExpression(input: string): number {
+    
+    // Inspired by Reverse Polish Notation, but handles brackets as well
+    function infixToPostfix(tokens: RegExpMatchArray | null): string [] {
+      if(!tokens){
+        throw new Error("infixToPostfix: No tokens supplied")
+      }
+      const outputQueue: string[] = [];
+      const operatorStack: string[] = [];
   
       for (const token of tokens) {
-        if (!isNaN(token)) {
+        if (isNumber(token)) {
           outputQueue.push(token);
         } else if (token in operators) {
           while (
@@ -39,13 +53,14 @@ export default function processMathExpression(input) {
       }
   
       while (operatorStack.length) {
-        outputQueue.push(operatorStack.pop());
+        const top = operatorStack.pop()
+        top && outputQueue.push(top);
       }
   
       return outputQueue;
     }
   
-    function evaluatePostfix(postfixTokens) {
+    function evaluatePostfix(postfixTokens: string []): number {
       const stack = [];
   
       for (const token of postfixTokens) {
@@ -85,32 +100,39 @@ export default function processMathExpression(input) {
   
       return stack.pop();
     }
-  
-    const tokens = input.match(/(\d+(\.\d+)?|\+|\-|\*|\/|\^|%|\√|\(|\))/g);
 
-     // Refactor this out of the code: automatically add brackets after √ if there's only one number
-    for (let i = 0; i < tokens.length; i++) {
-        if (tokens[i] === '√' && !isNaN(tokens[i + 1])) {
-        tokens.splice(i + 1, 0, '(');
-        const closingIndex = tokens.indexOf(')', i + 1);
-        if (closingIndex === -1) {
-            tokens.push(')');
-        } else {
-            tokens.splice(closingIndex + 1, 0, ')');
+    function rebuildExpressionWithBracketsInFrontOfSqrt(tokens: RegExpMatchArray | null): RegExpMatchArray {
+        if (!tokens) {
+            throw new Error("rebuildExpressionWithBracketsInFrontOfSqrt: No tokens supplied");
         }
+    
+        const newTokens: string[] = [];
+    
+        for (let i = 0; i < tokens.length; i++) {
+            if (tokens[i] === '√' && isNumber(tokens[i + 1])) {
+                newTokens.push(tokens[i], '(', ...tokens.slice(i + 1, i + 3), ')');
+                i += 2;
+            } else {
+                newTokens.push(tokens[i]);
+            }
         }
+    
+        return newTokens as RegExpMatchArray;
     }
   
-    const postfixTokens = infixToPostfix(tokens);
+    const tokens = input.match(DIGITS_AND_OPERATORS_REGEX);
+    
+    if(!tokens){
+        throw new Error("processMathExpression: No tokens found")
+    }
+
+    const updatedTokens = rebuildExpressionWithBracketsInFrontOfSqrt(tokens)
+  
+    const postfixTokens = infixToPostfix(updatedTokens);
     const result = evaluatePostfix(postfixTokens);
   
     return result;
-  }
-
-// const inputExpression = "2 + √(25+2) + 2^3 - 10%3"; // 14.896152422706631 
-// const result = processMathExpression(inputExpression);
-
-// console.log(result); // Output: 14.896152422706631 
+}
 
 // There is a limit on sqrt as there is no nesting in there
 // const testCases = [
@@ -122,7 +144,8 @@ export default function processMathExpression(input) {
 //     ['√(25) + 2^(1 + 1) - 10%3',8],
 //     ['√(4) ^ 3 - 10 % 3', 7],
 //     ['2^3 * 4 + √(100) ^ 2 - 10%3', 131],
-//     ['2^3 * 4 + √(100+44) ^ 2 - 10%3', 175]
+//     ['2^3 * 4 + √(100+44) ^ 2 - 10%3', 175],
+//     ['2+3^2/3 + √144', 17]
 //   ];
   
 // function testCustomEval() {

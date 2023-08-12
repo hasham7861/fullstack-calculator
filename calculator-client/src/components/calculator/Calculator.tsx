@@ -22,15 +22,11 @@ export const Calculator = () => {
 
   const handleButtonClick = (value: string) => {
     setInput((prevInput) => {
-      
-      // handle special cases 
-      console.log({
-        prevInput,
-        value
-      })
-      if(prevInput === '√' && !isNaN(value)){
-        return 'sqrt(' + value  + ')'
-      }
+      // debug
+      // console.log({
+      //   prevInput,
+      //   value
+      // })
       return prevInput + value
     
     });
