@@ -1,5 +1,7 @@
 import { useState } from "react";
+
 import './Calculator.css'
+import processMathExpression from "../../lib/math-expression-validator";
 
 const buttonsSchema = [
   ['1', '2', '3', '+'],
@@ -9,16 +11,8 @@ const buttonsSchema = [
   ['^', '%', '(', ')']
 ]
 
-
 const evaluateMathExpression = (expression: string) => {
-  
-  // To support 
-  const sanitizeExpression = expression
-    .replace(/√/g, 'Math.sqrt')
-    // .replace(/%/g, '/100')
-    .replace(/\^/g, '**');
-
-  return eval(sanitizeExpression);
+  return processMathExpression(expression)
   
 }
 
@@ -27,7 +21,19 @@ export const Calculator = () => {
   const [result, setResult] = useState('');
 
   const handleButtonClick = (value: string) => {
-    setInput((prevInput) => prevInput + value);
+    setInput((prevInput) => {
+      
+      // handle special cases 
+      console.log({
+        prevInput,
+        value
+      })
+      if(prevInput === '√' && !isNaN(value)){
+        return 'sqrt(' + value  + ')'
+      }
+      return prevInput + value
+    
+    });
   };
 
   const handleCalculate = () => {
@@ -35,7 +41,8 @@ export const Calculator = () => {
       const calculatedResult = evaluateMathExpression(input);
       setResult(calculatedResult);
     } catch (error) {
-      setResult('Error');
+      console.log(error)
+      setResult('Error',);
     }
   };
   

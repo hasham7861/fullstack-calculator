@@ -1,125 +1,133 @@
-// NOTES: THE FOLLOWING RPN is wrong way to solve problems. I will need to follow PEDMAS logic to solve issue
+// TODO: Refactor this RPN code to have proper typing and smaller functions to make it easy to read.
 
 // type OperatorType = '+' | '-' | '*' | '/' | '%' | '^' | '√'
 
-// function infixToRPN(expression: string): string {
-//     const precedence: Record<OperatorType, number> = {
-//         '+': 1,
-//         '-': 1,
-//         '*': 2,
-//         '/': 2,
-//         '%': 2,
-//         '√': 3,
-//         '^': 4,
-//     };
+export default function processMathExpression(input) {
+    const operators = {
+      '+': 1,
+      '-': 1,
+      '*': 2,
+      '/': 2,
+      '^': 3,
+      '%': 2,
+      '√': 4,
+    };
+  
+    function infixToPostfix(tokens) {
+      const outputQueue = [];
+      const operatorStack = [];
+  
+      for (const token of tokens) {
+        if (!isNaN(token)) {
+          outputQueue.push(token);
+        } else if (token in operators) {
+          while (
+            operatorStack.length &&
+            operators[operatorStack[operatorStack.length - 1]] >= operators[token]
+          ) {
+            outputQueue.push(operatorStack.pop());
+          }
+          operatorStack.push(token);
+        } else if (token === '(') {
+          operatorStack.push(token);
+        } else if (token === ')') {
+          while (operatorStack.length && operatorStack[operatorStack.length - 1] !== '(') {
+            outputQueue.push(operatorStack.pop());
+          }
+          operatorStack.pop(); // Remove the opening parenthesis
+        }
+      }
+  
+      while (operatorStack.length) {
+        outputQueue.push(operatorStack.pop());
+      }
+  
+      return outputQueue;
+    }
+  
+    function evaluatePostfix(postfixTokens) {
+      const stack = [];
+  
+      for (const token of postfixTokens) {
+        if (!isNaN(token)) {
+          stack.push(parseFloat(token));
+        } else if (token in operators) {
+          if (token === '√') {
+            const operand = stack.pop();
+            stack.push(Math.sqrt(operand));
+          } else if (token === '%') {
+            const right = stack.pop();
+            const left = stack.pop();
+            stack.push(left % right);
+          } else {
+            const right = stack.pop();
+            const left = stack.pop();
+            switch (token) {
+              case '+':
+                stack.push(left + right);
+                break;
+              case '-':
+                stack.push(left - right);
+                break;
+              case '*':
+                stack.push(left * right);
+                break;
+              case '/':
+                stack.push(left / right);
+                break;
+              case '^':
+                stack.push(Math.pow(left, right));
+                break;
+            }
+          }
+        }
+      }
+  
+      return stack.pop();
+    }
+  
+    const tokens = input.match(/(\d+(\.\d+)?|\+|\-|\*|\/|\^|%|\√|\(|\))/g);
 
-//     function isOperator(token: OperatorType): boolean {
-//         return token in precedence;
+     // Refactor this out of the code: automatically add brackets after √ if there's only one number
+    for (let i = 0; i < tokens.length; i++) {
+        if (tokens[i] === '√' && !isNaN(tokens[i + 1])) {
+        tokens.splice(i + 1, 0, '(');
+        const closingIndex = tokens.indexOf(')', i + 1);
+        if (closingIndex === -1) {
+            tokens.push(')');
+        } else {
+            tokens.splice(closingIndex + 1, 0, ')');
+        }
+        }
+    }
+  
+    const postfixTokens = infixToPostfix(tokens);
+    const result = evaluatePostfix(postfixTokens);
+  
+    return result;
+  }
+
+// const inputExpression = "2 + √(25+2) + 2^3 - 10%3"; // 14.896152422706631 
+// const result = processMathExpression(inputExpression);
+
+// console.log(result); // Output: 14.896152422706631 
+
+// There is a limit on sqrt as there is no nesting in there
+// const testCases = [
+//     ['2 + √(25) + 2^3 - 10%3', 14],
+//     ['√(9) + 2^2 + 5%2', 8],
+//     ['√(16) - 3^2 + 15%4', -2],
+//     ['2^3 * 4 - √(81) % 7', 30],
+//     ['10 + √(144) - 3^2 * 2%5', 19],
+//     ['√(25) + 2^(1 + 1) - 10%3',8],
+//     ['√(4) ^ 3 - 10 % 3', 7],
+//     ['2^3 * 4 + √(100) ^ 2 - 10%3', 131],
+//     ['2^3 * 4 + √(100+44) ^ 2 - 10%3', 175]
+//   ];
+  
+// function testCustomEval() {
+//     for (const [expression, expectedResult] of testCases) {
+//         const result = processMathExpression(expression);
+//         console.log(`${expression}, output = ${result} and expectedResult = ${expectedResult}`);
 //     }
-
-//     function higherPrecedence(op1: OperatorType, op2: OperatorType): boolean {
-//         return precedence[op1] >= precedence[op2];
-//     }
-
-//     function convertToRPN(infixTokens) {
-//         const outputQueue = [];
-//         const operatorStack = [];
-
-//         for (const token of infixTokens) {
-//             if (!isNaN(parseFloat(token))) {
-//                 outputQueue.push(token);
-//             } else if (token === '(') {
-//                 operatorStack.push(token);
-//             } else if (token === ')') {
-//                 while (operatorStack.length > 0 && operatorStack[operatorStack.length - 1] !== '(') {
-//                     outputQueue.push(operatorStack.pop());
-//                 }
-//                 operatorStack.pop(); // Pop '('
-//             } else if (isOperator(token)) {
-//                 while (
-//                     operatorStack.length > 0 &&
-//                     operatorStack[operatorStack.length - 1] !== '(' &&
-//                     higherPrecedence(operatorStack[operatorStack.length - 1], token)
-//                 ) {
-//                     outputQueue.push(operatorStack.pop());
-//                 }
-//                 operatorStack.push(token);
-//             }
-//         }
-
-//         while (operatorStack.length > 0) {
-//             outputQueue.push(operatorStack.pop());
-//         }
-
-//         return outputQueue;
-//     }
-
-//     const tokens = expression.match(/(\d+(\.\d+)?)|[\^√%+\-*/()]/g);
-//     const rpnTokens = convertToRPN(tokens);
-//     return rpnTokens.join(' ');
 // }
-
-
-// const evaluateRPN = (expression: string) => {
-//   const stack: (string | number)[] = [];
-
-//   const tokens = expression.split(' ');
-// //   console.log('tokens', tokens)
-
-//   for (const token of tokens) {
-//     if (!isNaN(parseFloat(token))) {
-//       stack.push(parseFloat(token));
-//     } else {
-//       const b = stack.pop();
-//       const a = stack.pop();
-//       console.log('a & b currently: ', a, b)
-//       switch (token) {
-//         case '+':
-//         //   console.log(`${a} + ${b} = ${a+b}`)
-//           stack.push(a + b);
-//           break;
-//         case '-':
-//         //   console.log(`${a} - ${b} = ${a-b}`)
-//           stack.push(a - b);
-//           break;
-//         case '*':
-//         //   console.log(`${a} * ${b} = ${a*b}`)
-//           stack.push(a * b);
-//           break;
-//         case '/':
-//         //   console.log(`${a} / ${b} = ${a/b}`)
-//           stack.push(a / b);
-//           break;
-//         case '%':
-//         //   console.log(`${a} * ${b} / 100 = ${a * (b / 100)} `)
-//           stack.push(a * (b / 100));
-//           stack.push(b)
-//           break;
-//         case '^':
-//         //    console.log(`${a} ^ ${b} = ${Math.pow(a,b)}`)
-//           stack.push(Math.pow(a, b));
-//           break;
-//         case '√':
-//         //   console.log(`√ ${b} = ${Math.sqrt(b)}`)
-//           stack.push(Math.sqrt(b));
-//           break;
-//         default:
-//           throw new Error('Invalid token: ' + token);
-//       }
-//     }
-//   }
-
-//   return stack[0];
-// };
-
-// const solveMathExpression = (expression: string): number => {
-//   const rpn = infixToRPN(expression);
-//   return evaluateRPN(rpn);
-// };
-
-// // Test case
-// // const expression = '√(3+5)^2 + 10%'; // 8.282
-// // const expression = '(24.75 + 8.92) / (37.5 - 15.25)' // 1.51
-// const expression = '(3^4 * √85) + (27/3) - (2^6 + 15)' // For this test is broken
-// const result = solveMathExpression(expression);
-// console.log(result); 
