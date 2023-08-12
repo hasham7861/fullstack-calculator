@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import './Calculator.css'
-import processMathExpression from "../../lib/math-expression-validator";
+import mathCalculate from "../../lib/math-expression-validator";
 
 const buttonsSchema = [
   ['1', '2', '3', '+'],
@@ -12,7 +12,7 @@ const buttonsSchema = [
 ]
 
 const evaluateMathExpression = (expression: string) => {
-  return processMathExpression(expression)
+  return mathCalculate(expression)
   
 }
 

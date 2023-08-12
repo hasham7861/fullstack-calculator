@@ -26,128 +26,129 @@ const isNumber = (input: string): boolean => {
 
 const DIGITS_AND_OPERATORS_REGEX = /(\d+(\.\d+)?|\+|-|\*|\/|\^|%|√|\(|\))/g;
 
-export default function processMathExpression(input: string): number {
-  // Inspired by Reverse Polish Notation (RPN), but handles brackets as well
-  function infixToPostfix(tokens: RegExpMatchArray | null): string[] {
-    if (!tokens) {
-      throw new Error("infixToPostfix: No tokens supplied");
-    }
-    const outputQueue: string[] = [];
-    const operatorStack: string[] = [];
+// Inspired by Reverse Polish Notation (RPN), but handles brackets as well
+function infixToPostfix(tokens: RegExpMatchArray | null): string[] {
+  if (!tokens) {
+    throw new Error("infixToPostfix: No tokens supplied");
+  }
+  const outputQueue: string[] = [];
+  const operatorStack: string[] = [];
 
-    for (const token of tokens) {
-      if (isNumber(token)) {
-        outputQueue.push(token);
-      } else if (token in operators) {
-        const previousOperator = operatorStack[
-          operatorStack.length - 1
-        ] as OperatorType;
-        const currentOperator = token as OperatorType;
-        while (
-          operatorStack.length &&
-          operators[previousOperator] >= operators[currentOperator]
-        ) {
-          const top = operatorStack.pop();
-          top && outputQueue.push(top);
-        }
-        operatorStack.push(token);
-      } else if (token === "(") {
-        operatorStack.push(token);
-      } else if (token === ")") {
-        while (
-          operatorStack.length &&
-          operatorStack[operatorStack.length - 1] !== "("
-        ) {
-          const top = operatorStack.pop();
-          top && outputQueue.push(top);
-        }
-        operatorStack.pop(); // Remove the opening parenthesis
+  for (const token of tokens) {
+    if (isNumber(token)) {
+      outputQueue.push(token);
+    } else if (token in operators) {
+      const previousOperator = operatorStack[
+        operatorStack.length - 1
+      ] as OperatorType;
+      const currentOperator = token as OperatorType;
+      while (
+        operatorStack.length &&
+        operators[previousOperator] >= operators[currentOperator]
+      ) {
+        const top = operatorStack.pop();
+        top && outputQueue.push(top);
       }
+      operatorStack.push(token);
+    } else if (token === "(") {
+      operatorStack.push(token);
+    } else if (token === ")") {
+      while (
+        operatorStack.length &&
+        operatorStack[operatorStack.length - 1] !== "("
+      ) {
+        const top = operatorStack.pop();
+        top && outputQueue.push(top);
+      }
+      operatorStack.pop(); // Remove the opening parenthesis
     }
-
-    while (operatorStack.length) {
-      const top = operatorStack.pop();
-      top && outputQueue.push(top);
-    }
-
-    return outputQueue;
   }
 
-  /**
-   * @description Generic RPN evaluator
-   */
-  function evaluatePostfix(postfixTokens: string[]): number {
-    const stack: number[] = [];
-
-    for (const token of postfixTokens) {
-      if (isNumber(token)) {
-        stack.push(parseFloat(token));
-      } else if (token in operators) {
-        const right = stack.pop();
-        const left = stack.pop();
-        switch (token) {
-          case "√":
-            left && stack.push(left); // push back extra pop
-            right && stack.push(Math.sqrt(right));
-            break;
-          case "%":
-            left && right && stack.push(left % right);
-            break;
-          case "+":
-            left && right && stack.push(left + right);
-            break;
-          case "-":
-            left && right && stack.push(left - right);
-            break;
-          case "*":
-            left && right && stack.push(left * right);
-            break;
-          case "/":
-            left && right && stack.push(left / right);
-            break;
-          case "^":
-            left && right && stack.push(Math.pow(left, right));
-            break;
-        }
-      }
-    }
-
-    const answer = stack.pop();
-
-    if (!answer) {
-      throw new Error("evaluatePostfix: unable to evaluate the RPN expression");
-    }
-
-    return answer;
+  while (operatorStack.length) {
+    const top = operatorStack.pop();
+    top && outputQueue.push(top);
   }
 
-  function rebuildExpressionWithBracketsInFrontOfSqrt(
-    tokens: RegExpMatchArray | null
-  ): RegExpMatchArray {
-    if (!tokens) {
-      throw new Error(
-        "rebuildExpressionWithBracketsInFrontOfSqrt: No tokens supplied"
-      );
-    }
+  return outputQueue;
+}
 
-    const newTokens: string[] = [];
+/**
+ * @description Generic RPN evaluator
+ */
+function evaluatePostfix(postfixTokens: string[]): number {
+  const stack: number[] = [];
 
-    for (let i = 0; i < tokens.length; i++) {
-      if (tokens[i] === "√" && isNumber(tokens[i + 1])) {
-        newTokens.push(tokens[i], "(", ...tokens.slice(i + 1, i + 3), ")");
-        i += 2;
-      } else {
-        newTokens.push(tokens[i]);
+  for (const token of postfixTokens) {
+    if (isNumber(token)) {
+      stack.push(parseFloat(token));
+    } else if (token in operators) {
+      const right = stack.pop();
+      const left = stack.pop();
+      switch (token) {
+        case "√":
+          left && stack.push(left); // push back extra pop
+          right && stack.push(Math.sqrt(right));
+          break;
+        case "%":
+          left && right && stack.push(left % right);
+          break;
+        case "+":
+          left && right && stack.push(left + right);
+          break;
+        case "-":
+          left && right && stack.push(left - right);
+          break;
+        case "*":
+          left && right && stack.push(left * right);
+          break;
+        case "/":
+          left && right && stack.push(left / right);
+          break;
+        case "^":
+          left && right && stack.push(Math.pow(left, right));
+          break;
       }
     }
-
-    return newTokens as RegExpMatchArray;
   }
 
+  const answer = stack.pop();
+
+  if (!answer) {
+    throw new Error("evaluatePostfix: unable to evaluate the RPN expression");
+  }
+
+  return answer;
+}
+
+function rebuildExpressionWithBracketsInFrontOfSqrt(
+  tokens: RegExpMatchArray | null
+): RegExpMatchArray {
+  if (!tokens) {
+    throw new Error(
+      "rebuildExpressionWithBracketsInFrontOfSqrt: No tokens supplied"
+    );
+  }
+
+  const newTokens: string[] = [];
+
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i] === "√" && isNumber(tokens[i + 1])) {
+      newTokens.push(tokens[i], "(", ...tokens.slice(i + 1, i + 3), ")");
+      i += 2;
+    } else {
+      newTokens.push(tokens[i]);
+    }
+  }
+
+  return newTokens as RegExpMatchArray;
+}
+
+
+export default function mathCalculate(input: string): number {
   const tokens = input.match(DIGITS_AND_OPERATORS_REGEX);
 
   if (!tokens) {
-    throw new Error("processMathExpression: No tokens found");
+    throw new Error("mathCalculate: No tokens found");
   }
 
   const updatedTokens = rebuildExpressionWithBracketsInFrontOfSqrt(tokens);
