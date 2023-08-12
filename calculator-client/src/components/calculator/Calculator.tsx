@@ -81,13 +81,13 @@ export const Calculator = () => {
     <div className="calculator">
       <input type="text" value={input} readOnly />
       <div className="input-buttons">
-        <button onClick={handleClearInput}>AC</button>
+        <button onClick={handleClearInput}>Ac</button>
         <button onClick={handleRedo}>Del</button>
         <button onClick={handleCalculate}>=</button>
       </div>
       <div className="history-buttons">
-        <button onClick={handlePrev}>prev</button>
-        <button onClick={handleNext}>next</button>
+        <button onClick={handlePrev}>Prev</button>
+        <button onClick={handleNext}>Next</button>
       </div>
       <div className="buttons">
         {
