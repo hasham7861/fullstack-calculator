@@ -167,26 +167,26 @@ export default function mathCalculate(input: string): number {
 }
 
 // There is a limit on sqrt as there is no nesting in there
-const testCases = [
-    ['2 + √(25) + 2^3 - 10%3', 14],
-    ['√(9) + 2^2 + 5%2', 8],
-    ['√(16) - 3^2 + 15%4', -2],
-    ['2^3 * 4 - √(81) % 7', 30],
-    ['10 + √(144) - 3^2 * 2%5', 19],
-    ['√(25) + 2^(1 + 1) - 10%3',8],
-    ['√(4) ^ 3 - 10 % 3', 7],
-    ['2^3 * 4 + √100 ^ 2 - 10%3', 131], // handles case where there is no brackets under sqrt
-    ['2^3 * 4 + √(100+44) ^ 2 - 10%3', 175],
-    ['2^3 * 4 + √(100+44+2+1) ^ 2 - 10%3', 178], // Multiple things in sqrt brackets support
-    ['5√144', 60], // edge case when there is nothing before the sqrt root and it should add * before it
-    ['4+-5' , -1] // edge case to handle +- right next to each other
-  ];
+// const testCases = [
+//     ['2 + √(25) + 2^3 - 10%3', 14],
+//     ['√(9) + 2^2 + 5%2', 8],
+//     ['√(16) - 3^2 + 15%4', -2],
+//     ['2^3 * 4 - √(81) % 7', 30],
+//     ['10 + √(144) - 3^2 * 2%5', 19],
+//     ['√(25) + 2^(1 + 1) - 10%3',8],
+//     ['√(4) ^ 3 - 10 % 3', 7],
+//     ['2^3 * 4 + √100 ^ 2 - 10%3', 131], // handles case where there is no brackets under sqrt
+//     ['2^3 * 4 + √(100+44) ^ 2 - 10%3', 175],
+//     ['2^3 * 4 + √(100+44+2+1) ^ 2 - 10%3', 178], // Multiple things in sqrt brackets support
+//     ['5√144', 60], // edge case when there is nothing before the sqrt root and it should add * before it
+//     ['4+-5' , -1] // edge case to handle +- right next to each other
+//   ];
 
-function test() {
-    for (const [expression, expectedResult] of testCases) {
-        const result = mathCalculate(expression as string);
-        console.log(`${expression}, output = ${result} and expectedResult = ${expectedResult}`);
-    }
-}
+// function test() {
+//     for (const [expression, expectedResult] of testCases) {
+//         const result = mathCalculate(expression as string);
+//         console.log(`${expression}, output = ${result} and expectedResult = ${expectedResult}`);
+//     }
+// }
 
-test()
+// test()
