@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-import './Calculator.css'
+import './Calculator.css';
 import mathCalculate from "../../lib/math-expression-validator";
+import { CalculationsHistoryStore } from "../../lib/browser-local-storage";
 
 const buttonsSchema = [
   ['1', '2', '3', '+'],
@@ -32,6 +33,7 @@ export const Calculator = () => {
     try {
       const calculatedResult = evaluateMathExpression(input);
       setInput(calculatedResult.toString())
+      CalculationsHistoryStore.setItem(input)
     } catch (error) {
       console.log(error)
       setInput('Error')
@@ -39,12 +41,16 @@ export const Calculator = () => {
   };
 
   const handleClearInput = () => {
-    //TODO: in future save the result in webstorage and user history
     setInput('')
   }
 
   const handleRedo = () => {
     setInput((prevInput) => prevInput.slice(0, -1))
+  }
+
+  const handlePrev = () => {
+    const lastItem = CalculationsHistoryStore.getPreviousAndMoveCursorBack()
+    lastItem !== undefined && setInput(lastItem)
   }
 
 
@@ -64,7 +70,6 @@ export const Calculator = () => {
         break;
       default:
         throw new Error('Invalid memory function')
-        break;
     }
   }
   return (
@@ -74,6 +79,7 @@ export const Calculator = () => {
         <button onClick={handleClearInput}>AC</button>
         <button onClick={handleRedo}>Del</button>
         <button onClick={handleCalculate}>=</button>
+        <button onClick={handlePrev}>prev</button>
       </div>
       <div className="buttons">
         {
