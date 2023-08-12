@@ -94,11 +94,11 @@ const evaluateRPN = (expression: string) => {
         case '%':
         //   console.log(`${a} * ${b} / 100 = ${a * (b / 100)} `)
           stack.push(a * (b / 100));
+          stack.push(b)
           break;
         case '^':
         //    console.log(`${a} ^ ${b} = ${Math.pow(a,b)}`)
           stack.push(Math.pow(a, b));
-          stack.push(a)
           break;
         case '√':
         //   console.log(`√ ${b} = ${Math.sqrt(b)}`)
