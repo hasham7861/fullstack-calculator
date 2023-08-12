@@ -17,11 +17,6 @@ input {
   border-bottom: 2px solid black;
 }
 
-.result {
-  font-size: 26px;
-  font-weight: bold;
-}
-
 .calculator-buttons-row {
   display: flex;
   justify-content: center;
@@ -41,12 +36,27 @@ input {
   margin: 5px;
 }
 
-.result {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-  font-size: 22px;
+.input-buttons button {
+  font-size: 16px;
+  background-color: #0b0701;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  margin: 5px;
+  color: white;
+}
+
+.memory-buttons button {
+  font-size: 16px;
+  background-color: #524bdc;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 60px;
+  height: 60px;
+  margin: 5px;
 }
 
 .result button {

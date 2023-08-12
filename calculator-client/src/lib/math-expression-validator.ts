@@ -20,11 +20,11 @@ const operators: Record<OperatorType, OperatorPrecedence> = {
 
 const isNumber = (input: string): boolean => {
   // This regex assumes we already extract the + or minus sign away from number
-  const numberPattern = /^\d+(\.\d+)?$/;
+  const numberPattern = /^-?\d+(\.\d+)?$/;
   return numberPattern.test(input);
 };
 
-const DIGITS_AND_OPERATORS_REGEX = /(\d+(\.\d+)?|\+|-|\*|\/|\^|%|√|\(|\))/g;
+const DIGITS_AND_OPERATORS_REGEX = /(\d+(\.\d+)?|-\d+(\.\d+)?|\+|-|\*|\/|\^|%|√|\(|\))/g;
 
 // Inspired by Reverse Polish Notation (RPN), but handles brackets as well
 function infixToPostfix(tokens: RegExpMatchArray | null): string [] {
@@ -43,7 +43,7 @@ function infixToPostfix(tokens: RegExpMatchArray | null): string [] {
         operators[operatorStack[operatorStack.length - 1] as OperatorType] >= operators[token as OperatorType]
       ) {
         const top = operatorStack.pop()
-        top && outputQueue.push(top)
+        top !== undefined  && outputQueue.push(top)
       }
       operatorStack.push(token);
     } else if (token === '(') {
@@ -51,7 +51,7 @@ function infixToPostfix(tokens: RegExpMatchArray | null): string [] {
     } else if (token === ')') {
       while (operatorStack.length && operatorStack[operatorStack.length - 1] !== '(') {
         const top = operatorStack.pop()
-        top && outputQueue.push(top)
+        top !== undefined  && outputQueue.push(top)
       }
       operatorStack.pop(); // Remove the opening parenthesis
     }
@@ -59,7 +59,7 @@ function infixToPostfix(tokens: RegExpMatchArray | null): string [] {
 
   while (operatorStack.length) {
     const top = operatorStack.pop()
-    top && outputQueue.push(top);
+    top !== undefined && outputQueue.push(top);
   }
 
   return outputQueue;
@@ -79,26 +79,26 @@ function evaluatePostfix(postfixTokens: string[]): number {
       const left = stack.pop();
       switch (token) {
         case "√":
-          left && stack.push(left); // push back extra pop
-          right && stack.push(Math.sqrt(right));
+          left !== undefined && stack.push(left); // push back extra pop
+          right !== undefined && stack.push(Math.sqrt(right));
           break;
         case "%":
-          left && right && stack.push(left % right);
+          left !== undefined && right !== undefined && stack.push(left % right);
           break;
         case "+":
-          left && right && stack.push(left + right);
+          left !== undefined && right !== undefined && stack.push(left + right);
           break;
         case "-":
-          left && right && stack.push(left - right);
+          left !== undefined && right !== undefined && stack.push(left - right);
           break;
         case "*":
-          left && right && stack.push(left * right);
+          left !== undefined && right !== undefined && stack.push(left * right);
           break;
         case "/":
-          left && right && stack.push(left / right);
+          left !== undefined && right !== undefined && stack.push(left / right);
           break;
         case "^":
-          left && right && stack.push(Math.pow(left, right));
+          left !== undefined && right !== undefined && stack.push(Math.pow(left, right));
           break;
       }
     }
@@ -167,25 +167,26 @@ export default function mathCalculate(input: string): number {
 }
 
 // There is a limit on sqrt as there is no nesting in there
-// const testCases = [
-//     ['2 + √(25) + 2^3 - 10%3', 14],
-//     ['√(9) + 2^2 + 5%2', 8],
-//     ['√(16) - 3^2 + 15%4', -2],
-//     ['2^3 * 4 - √(81) % 7', 30],
-//     ['10 + √(144) - 3^2 * 2%5', 19],
-//     ['√(25) + 2^(1 + 1) - 10%3',8],
-//     ['√(4) ^ 3 - 10 % 3', 7],
-//     ['2^3 * 4 + √100 ^ 2 - 10%3', 131], // handles case where there is no brackets under sqrt
-//     ['2^3 * 4 + √(100+44) ^ 2 - 10%3', 175],
-//     ['2^3 * 4 + √(100+44+2+1) ^ 2 - 10%3', 175], // Multiple things in sqrt brackets support
-//     ['5√144', 60] // edge case when there is nothing before the sqrt root and it should add * before it
-//   ];
+const testCases = [
+    ['2 + √(25) + 2^3 - 10%3', 14],
+    ['√(9) + 2^2 + 5%2', 8],
+    ['√(16) - 3^2 + 15%4', -2],
+    ['2^3 * 4 - √(81) % 7', 30],
+    ['10 + √(144) - 3^2 * 2%5', 19],
+    ['√(25) + 2^(1 + 1) - 10%3',8],
+    ['√(4) ^ 3 - 10 % 3', 7],
+    ['2^3 * 4 + √100 ^ 2 - 10%3', 131], // handles case where there is no brackets under sqrt
+    ['2^3 * 4 + √(100+44) ^ 2 - 10%3', 175],
+    ['2^3 * 4 + √(100+44+2+1) ^ 2 - 10%3', 178], // Multiple things in sqrt brackets support
+    ['5√144', 60], // edge case when there is nothing before the sqrt root and it should add * before it
+    ['4+-5' , -1] // edge case to handle +- right next to each other
+  ];
 
-// function test() {
-//     for (const [expression, expectedResult] of testCases) {
-//         const result = mathCalculate(expression as string);
-//         console.log(`${expression}, output = ${result} and expectedResult = ${expectedResult}`);
-//     }
-// }
+function test() {
+    for (const [expression, expectedResult] of testCases) {
+        const result = mathCalculate(expression as string);
+        console.log(`${expression}, output = ${result} and expectedResult = ${expectedResult}`);
+    }
+}
 
-// test()
+test()
