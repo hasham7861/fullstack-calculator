@@ -19,6 +19,7 @@ const evaluateMathExpression = (expression: string): number => {
 
 }
 
+const calculationStore = new CalculationsHistoryStore()
 export const Calculator = () => {
   const [input, setInput] = useState('');
   const [memoryFunctionState, setMemoryFunctionState] = useState(0);
@@ -33,9 +34,9 @@ export const Calculator = () => {
     try {
       const calculatedResult = evaluateMathExpression(input);
       setInput(calculatedResult.toString())
-      CalculationsHistoryStore.setItem(input)
+      calculationStore.setItem(input)
+      calculationStore.resetCursorToLastPosition()
     } catch (error) {
-      console.log(error)
       setInput('Error')
     }
   };
@@ -49,10 +50,14 @@ export const Calculator = () => {
   }
 
   const handlePrev = () => {
-    const lastItem = CalculationsHistoryStore.getPreviousAndMoveCursorBack()
-    lastItem !== undefined && setInput(lastItem)
+    const prevItem = calculationStore.getPreviousItem()
+    prevItem !== undefined && setInput(prevItem)
   }
 
+  const handleNext = () => {
+    const nextItem = calculationStore.getNextItem()
+    nextItem !== undefined && setInput(nextItem)
+  }
 
   const handleMemoryFunctionState = (value: string) => {
     switch (value) {
@@ -79,7 +84,10 @@ export const Calculator = () => {
         <button onClick={handleClearInput}>AC</button>
         <button onClick={handleRedo}>Del</button>
         <button onClick={handleCalculate}>=</button>
+      </div>
+      <div className="history-buttons">
         <button onClick={handlePrev}>prev</button>
+        <button onClick={handleNext}>next</button>
       </div>
       <div className="buttons">
         {

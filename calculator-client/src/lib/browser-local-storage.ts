@@ -1,6 +1,6 @@
 class LocalStorage {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    static getItem(key: string): any {
+    getItem(key: string): any {
         try {
             const item = localStorage.getItem(key);
             return item ? JSON.parse(item) : undefined;
@@ -10,7 +10,7 @@ class LocalStorage {
         }
     }
     
-    static setItem<T>(key: string, value: T): void {
+    setItem<T>(key: string, value: T): void {
         try {
             localStorage.setItem(key, JSON.stringify(value));
         } catch (error) {
@@ -18,7 +18,7 @@ class LocalStorage {
         }
     }
     
-    static removeItem(key: string): void {
+    removeItem(key: string): void {
         try {
             localStorage.removeItem(key);
         } catch (error) {
@@ -29,19 +29,63 @@ class LocalStorage {
 
 
 class CalculationsHistoryStore extends LocalStorage {
+    readonly EXPRESSIONS_HISTORY = 'EXPRESSIONS_HISTORY'
+    cursor: number = 0;
 
-    static readonly EXPRESSIONS_HISTORY = 'EXPRESSIONS_HISTORY'
-
-    static setItem(expression: string): void {
-        const store = super.getItem(this.EXPRESSIONS_HISTORY) || []
-        store.push(expression)
-        super.setItem(this.EXPRESSIONS_HISTORY,store)
+    constructor(){
+        super()
+        this.resetCursorToLastPosition()
+    }
+        
+    private getStoredExpressions() {
+        return super.getItem(this.EXPRESSIONS_HISTORY) || []
+    }
+    private getCursorLastIndex(): number {
+        const store = this.getStoredExpressions()
+        return store.length -1
     }
 
-    static getPreviousAndMoveCursorBack(): string | undefined {
-        const expressions = super.getItem(this.EXPRESSIONS_HISTORY);
-        const lastKey = expressions && expressions.length > 0 ? expressions.pop() : 0;
-        super.setItem(this.EXPRESSIONS_HISTORY, expressions)
+    public resetCursorToLastPosition(){
+        this.cursor = this.getCursorLastIndex()
+    }
+    
+    private moveCursorBack() {
+        if((this.cursor - 1) < 0){
+            this.cursor = 0
+        } else{
+
+            this.cursor-=1
+        }
+    }
+
+    private moveCursorForward() {
+        if((this.cursor + 1) > this.getCursorLastIndex()){
+            this.resetCursorToLastPosition()
+        } else{
+            this.cursor+=1
+        }
+    }
+
+    setItem(expression: string): void {
+        const store = this.getStoredExpressions()
+        store.push(expression)
+        super.setItem(this.EXPRESSIONS_HISTORY,store)
+        this.resetCursorToLastPosition()
+    }
+
+    getPreviousItem(): string | undefined {
+        this.moveCursorBack()
+        const expressions = this.getStoredExpressions()
+        const cursorItem = expressions.at(this.cursor)
+        const lastKey = expressions && cursorItem !== undefined ? cursorItem : 0;
+        return lastKey;
+    }
+
+    getNextItem(): string | undefined {
+        const expressions = this.getStoredExpressions()
+        const cursorItem = expressions.at(this.cursor)
+        this.moveCursorForward()
+        const lastKey = expressions && cursorItem !== undefined ? cursorItem : 0;
         return lastKey;
     }
 }
