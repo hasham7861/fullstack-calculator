@@ -11,7 +11,7 @@ const buttonsSchema = [
   ['^', '%', '(', ')']
 ]
 
-const evaluateMathExpression = (expression: string) => {
+const evaluateMathExpression = (expression: string): number => {
   return mathCalculate(expression)
   
 }
@@ -35,7 +35,7 @@ export const Calculator = () => {
   const handleCalculate = () => {
     try {
       const calculatedResult = evaluateMathExpression(input);
-      setResult(calculatedResult);
+      setResult(calculatedResult.toString());
     } catch (error) {
       console.log(error)
       setResult('Error',);
@@ -48,6 +48,9 @@ export const Calculator = () => {
     setResult('')
   }
 
+  const handleRedo = () => {
+    setInput((prevInput) => prevInput.slice(0,-1))
+  }
   return (
     <div className="calculator">
       <input type="text" value={input} readOnly />
@@ -70,6 +73,7 @@ export const Calculator = () => {
         }
       </div>
       <button onClick={handleClearInput}>Clear</button>
+      <button onClick={handleRedo}>Redo</button>
       <button onClick={handleCalculate}>Calculate</button>
     </div>
   );

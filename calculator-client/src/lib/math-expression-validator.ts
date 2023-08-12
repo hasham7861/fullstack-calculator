@@ -27,9 +27,9 @@ const isNumber = (input: string): boolean => {
 const DIGITS_AND_OPERATORS_REGEX = /(\d+(\.\d+)?|\+|-|\*|\/|\^|%|√|\(|\))/g;
 
 // Inspired by Reverse Polish Notation (RPN), but handles brackets as well
-function infixToPostfix(tokens: RegExpMatchArray | null): string[] {
-  if (!tokens) {
-    throw new Error("infixToPostfix: No tokens supplied");
+function infixToPostfix(tokens: RegExpMatchArray | null): string [] {
+  if(!tokens){
+    throw new Error("infixToPostfix: No tokens supplied")
   }
   const outputQueue: string[] = [];
   const operatorStack: string[] = [];
@@ -38,34 +38,27 @@ function infixToPostfix(tokens: RegExpMatchArray | null): string[] {
     if (isNumber(token)) {
       outputQueue.push(token);
     } else if (token in operators) {
-      const previousOperator = operatorStack[
-        operatorStack.length - 1
-      ] as OperatorType;
-      const currentOperator = token as OperatorType;
       while (
         operatorStack.length &&
-        operators[previousOperator] >= operators[currentOperator]
+        operators[operatorStack[operatorStack.length - 1] as OperatorType] >= operators[token as OperatorType]
       ) {
-        const top = operatorStack.pop();
-        top && outputQueue.push(top);
+        const top = operatorStack.pop()
+        top && outputQueue.push(top)
       }
       operatorStack.push(token);
-    } else if (token === "(") {
+    } else if (token === '(') {
       operatorStack.push(token);
-    } else if (token === ")") {
-      while (
-        operatorStack.length &&
-        operatorStack[operatorStack.length - 1] !== "("
-      ) {
-        const top = operatorStack.pop();
-        top && outputQueue.push(top);
+    } else if (token === ')') {
+      while (operatorStack.length && operatorStack[operatorStack.length - 1] !== '(') {
+        const top = operatorStack.pop()
+        top && outputQueue.push(top)
       }
       operatorStack.pop(); // Remove the opening parenthesis
     }
   }
 
   while (operatorStack.length) {
-    const top = operatorStack.pop();
+    const top = operatorStack.pop()
     top && outputQueue.push(top);
   }
 
@@ -130,11 +123,26 @@ function rebuildExpressionWithBracketsInFrontOfSqrt(
   }
 
   const newTokens: string[] = [];
+  let bracketDepth = 0;
 
   for (let i = 0; i < tokens.length; i++) {
-    if (tokens[i] === "√" && isNumber(tokens[i + 1])) {
-      newTokens.push(tokens[i], "(", ...tokens.slice(i + 1, i + 3), ")");
-      i += 2;
+    if (tokens[i] === "(") {
+      bracketDepth++;
+    } else if (tokens[i] === ")") {
+      bracketDepth--;
+    }
+
+    if (tokens[i] === "√") {
+      // edge case when there is number preceding sqrt and no operator
+      if (i > 0 && isNumber(tokens[i - 1])) {
+        newTokens.push("*");
+      }
+      newTokens.push(tokens[i]);
+      // edge case to add brackets if there isn't brackets for single sqrt
+      if (isNumber(tokens[i + 1]) && bracketDepth === 0) {
+        newTokens.push("(", ...tokens.slice(i + 1, i + 2), ")");
+        i++;
+      }
     } else {
       newTokens.push(tokens[i]);
     }
@@ -142,7 +150,6 @@ function rebuildExpressionWithBracketsInFrontOfSqrt(
 
   return newTokens as RegExpMatchArray;
 }
-
 
 export default function mathCalculate(input: string): number {
   const tokens = input.match(DIGITS_AND_OPERATORS_REGEX);
@@ -168,14 +175,17 @@ export default function mathCalculate(input: string): number {
 //     ['10 + √(144) - 3^2 * 2%5', 19],
 //     ['√(25) + 2^(1 + 1) - 10%3',8],
 //     ['√(4) ^ 3 - 10 % 3', 7],
-//     ['2^3 * 4 + √(100) ^ 2 - 10%3', 131],
+//     ['2^3 * 4 + √100 ^ 2 - 10%3', 131], // handles case where there is no brackets under sqrt
 //     ['2^3 * 4 + √(100+44) ^ 2 - 10%3', 175],
-//     ['2+3^2/3 + √144', 17]
+//     ['2^3 * 4 + √(100+44+2+1) ^ 2 - 10%3', 175], // Multiple things in sqrt brackets support
+//     ['5√144', 60] // edge case when there is nothing before the sqrt root and it should add * before it
 //   ];
 
-// function testCustomEval() {
+// function test() {
 //     for (const [expression, expectedResult] of testCases) {
-//         const result = processMathExpression(expression);
+//         const result = mathCalculate(expression as string);
 //         console.log(`${expression}, output = ${result} and expectedResult = ${expectedResult}`);
 //     }
 // }
+
+// test()
