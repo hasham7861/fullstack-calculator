@@ -1,9 +1,9 @@
-import axios from 'axios';
 import './Login.css'
 import { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import BackendClient from '../../clients/backend-client';
 
 function Login() {
   
@@ -23,8 +23,7 @@ function Login() {
   const onClickHandleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
-      // TODO: create an interface/ client to talk with the backend
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/login`, 
+      const response = await BackendClient.post('/auth/login', 
       { username, password },
       { withCredentials: true }
       );
@@ -37,7 +36,7 @@ function Login() {
   const onClickHandleSignUp = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/signup`,
+      const response = await BackendClient.post('/auth/signup',
       { username, password },
       { withCredentials: true });
       loginAndRedirect()

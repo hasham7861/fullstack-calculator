@@ -1,15 +1,15 @@
 import { Link, Outlet } from 'react-router-dom';
 import './Navbar.css';
 import { useAppContext } from '../../context/AppContext';
-import axios from 'axios';
 import { toast } from '../toast/Toast';
+import BackendClient from '../../clients/backend-client';
 
 function Navbar() {
 
   const {isLoggedIn, logout, userLoggedIn} = useAppContext();
 
   const handleLogout = () => {
-    axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/logout`, null, { withCredentials: true })
+    BackendClient.post('/auth/logout', null)
     .then(response => {
       logout();
       toast.success(response.data.message);
