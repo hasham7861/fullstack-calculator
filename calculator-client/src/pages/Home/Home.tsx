@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { Calculator, CalculatorExpressionsHistory } from "../../components";
+import { CalculationsHistoryStore } from "../../lib/browser-local-storage";
 import "./Home.css";
 
-function Home() {
+const calculationStore = new CalculationsHistoryStore()
 
+function Home() {
+  const [calculationsHistory, setCalculationsHistory] = useState<string[]>(calculationStore.getStoredExpressions())
   return (
     <div className="home-page">
-      <Calculator />
-      <CalculatorExpressionsHistory/>
+      <Calculator calculationStore={calculationStore} setCalculationsHistory={setCalculationsHistory} />
+      <CalculatorExpressionsHistory calculationsHistory={calculationsHistory}/>
     </div>
   );
 }

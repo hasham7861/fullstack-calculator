@@ -1,18 +1,25 @@
 import './CalculatorExpressionsHistory.css';
 
-export function CalculatorExpressionsHistory () {
+
+interface IProps {
+  calculationsHistory: string []
+}
+
+export function CalculatorExpressionsHistory ({calculationsHistory}: IProps) {
+
   return (
     <div className="calculator-expressions-history-wrapper">
       <h2>Calculator Expressions History</h2>
       <div className="calculator-expressions-history-container">
-        <p>test</p>
-        <p>test</p>
-        <p>test</p>
-        <p>test</p>
-        <p>test</p>
-        <p>test</p>
-        <p>test</p>
-        <p>test</p>
+        {
+         calculationsHistory.map((expression: string, index: number) => {
+            return (
+              <div className="calculator-expressions-history-item" key={index+expression}>
+                <p>{expression}</p>
+              </div>
+            )
+          }
+        )}
       </div>
     </div>
   )

@@ -19,8 +19,16 @@ const evaluateMathExpression = (expression: string): number => {
 
 }
 
-const calculationStore = new CalculationsHistoryStore()
-export const Calculator = () => {
+interface IProps {
+  calculationStore: CalculationsHistoryStore
+  setCalculationsHistory: React.Dispatch<React.SetStateAction<string[]>>
+}
+export const Calculator = (
+  {
+    calculationStore, 
+    setCalculationsHistory
+  }: IProps) => {
+
   const [input, setInput] = useState('');
   const [memoryFunctionState, setMemoryFunctionState] = useState(0);
 
@@ -36,6 +44,8 @@ export const Calculator = () => {
       setInput(calculatedResult.toString())
       calculationStore.setItem(input)
       calculationStore.resetCursorToLastPosition()
+      // TODO: somehow the state of expressions history is notified that a new item is added
+      setCalculationsHistory((prevHistory) => [...prevHistory, input])
     } catch (error) {
       setInput('Error')
     }
