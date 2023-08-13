@@ -9,7 +9,7 @@ export function CalculatorExpressionsHistory ({calculationsHistory}: IProps) {
 
   return (
     <div className="calculator-expressions-history-wrapper">
-      <h2>Calculator Expressions History</h2>
+      <h2>Math Expressions History</h2>
       <div className="calculator-expressions-history-container">
         {
          calculationsHistory.map((expression: string, index: number) => {

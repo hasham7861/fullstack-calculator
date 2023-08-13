@@ -5,18 +5,20 @@
 }
 
 .calculator-expressions-history-container {
-  margin-top:20px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #ffe066;
-  padding: 30px 50px;
+  background-color: #ffeead;
+  padding: 10px 50px;
   height: 150px;
   width: 280px;
   overflow-y: auto;
-  border-radius: 10px;
-  font-family: 'Arial', sans-serif;
+  border-radius: 20px;
+  font-family: 'Comic Sans MS', cursive;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
 }
 
 .calculator-expressions-history-container::-webkit-scrollbar {
@@ -29,18 +31,23 @@
 }
 
 .calculator-expressions-history-container::-webkit-scrollbar-track {
-  background-color:#9c7624;
+  background-color: #9c7624;
   border-radius: 10px;
 }
 
-
 .calculator-expressions-history-container h2 {
-  font-size: 24px;
-  color: #ffbf35;
+  font-size: 28px;
+  color: #f39c12;
   margin-bottom: 10px;
 }
 
 .calculator-expressions-history-container p {
-  font-size: 16px;
+  font-size: 18px;
   margin: 5px 0;
+  color: #333;
+}
+
+.calculator-expressions-history-item {
+  border-bottom: 1px solid #f39c12;
+  padding:15px 0;
 }
