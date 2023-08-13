@@ -10,7 +10,7 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li {
   }
   
   nav {
-    background-color: #ffcc00; /* Honeycomb yellow */
+    background-color: #ffcc00;
     color: #333;
     padding: 10px;
     display: flex;
