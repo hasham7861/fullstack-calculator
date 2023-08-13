@@ -21,12 +21,9 @@ export const signup = async (req: Request, res: Response) => {
     });
     if (!req.session.username) {
       req.session.username = user.username;
-      // console.log('reinitialize session')
     }
-    // console.log('user', user);
     res.status(201).json({ message: 'User created successfully.' });
   } catch (error) {
-    console.log('error', error);
     res.status(500).json({ error: 'An error occurred.' });
   }
 }
@@ -34,7 +31,7 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
-  console.log('session before', req.session);
+
   try {
     const user = await prisma.user.findUnique({ where: { username } });
 
@@ -50,7 +47,6 @@ export const login = async (req: Request, res: Response) => {
 
     if (!req.session.username) {
       req.session.username = user.username;
-      // console.log('reinitialize session')
     }
 
     res.json({ message: 'Login successful.' });
