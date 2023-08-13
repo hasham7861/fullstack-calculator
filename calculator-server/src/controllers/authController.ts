@@ -58,3 +58,12 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'An error occurred.' });
   }
 }
+
+export const sessionActivity = async (req: Request, res: Response) => {
+  if (req.session.username) {
+    res.json({ authenticated: true, username: req.session.username });
+  }
+  else {
+    res.json({ authenticated: false });
+  }
+}
