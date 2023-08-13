@@ -2,8 +2,8 @@ import React, { createContext, useContext, useState } from 'react';
 
 interface AppContextProps {
   isLoggedIn: boolean;
-  emailOfUserLoggedIn: string;
-  setEmailOfUserLoggedIn: React.Dispatch<React.SetStateAction<string>>;
+  userLoggedIn: string;
+  setUserLoggedIn: React.Dispatch<React.SetStateAction<string>>;
   login: () => void;
   logout: () => void;
 }
@@ -21,7 +21,7 @@ export function useAppContext(): AppContextProps {
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [emailOfUserLoggedIn, setEmailOfUserLoggedIn] = useState<string>('');
+  const [userLoggedIn, setUserLoggedIn] = useState<string>('');
 
   const login = () => {
     setIsLoggedIn(true);
@@ -35,8 +35,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     isLoggedIn,
     login,
     logout,
-    emailOfUserLoggedIn,
-    setEmailOfUserLoggedIn,
+    userLoggedIn,
+    setUserLoggedIn,
   };
 
   return (<AppContext.Provider value={contextValue}>

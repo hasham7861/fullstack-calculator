@@ -4,7 +4,7 @@ import { useAppContext } from '../../context/AppContext';
 
 function Navbar() {
 
-  const {isLoggedIn, logout, emailOfUserLoggedIn} = useAppContext();
+  const {isLoggedIn, logout, userLoggedIn} = useAppContext();
 
   const handleLogout = () => {
     logout();
@@ -26,7 +26,7 @@ function Navbar() {
           </li>
           {isLoggedIn ? (
             <li className="user-info">
-              <p>{emailOfUserLoggedIn}</p>
+              <p>{userLoggedIn}</p>
               <button onClick={handleLogout} className="user-icon">
                 🙋‍♂️
               </button>

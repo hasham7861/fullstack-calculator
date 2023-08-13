@@ -6,15 +6,15 @@ import { useNavigate } from 'react-router-dom';
 
 function Login() {
   
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const {setEmailOfUserLoggedIn, login} = useAppContext()
+  const {setUserLoggedIn, login} = useAppContext()
   const navigate = useNavigate();
 
 
   const loginAndRedirect = () => {
-    setEmailOfUserLoggedIn(email)
+    setUserLoggedIn(username)
     login()
     navigate('/');
   }
@@ -22,7 +22,7 @@ function Login() {
   const onClickHandleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/login`, { email, password });
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/login`, { username, password });
       console.log(response.data.message);
       loginAndRedirect()
     } catch (error) {
@@ -32,7 +32,7 @@ function Login() {
   const onClickHandleSignUp = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/signup`, { email, password });
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/signup`, { username, password });
       console.log(response.data.message);
       loginAndRedirect()
     } catch (error) {
@@ -46,9 +46,9 @@ function Login() {
         <form className="login-form">
           <input
             type="text"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}/>
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}/>
           <input
             type="password"
             placeholder="Password"

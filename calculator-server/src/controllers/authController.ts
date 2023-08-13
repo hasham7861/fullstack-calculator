@@ -3,13 +3,13 @@ import { prisma } from '../utils/prisma';
 import { hashPassword, compareHash } from '../utils/bcrypt';
 
 export const signup = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
   try {
     const hashedPassword = await hashPassword(password);
     const user = await prisma.user.create({
       data: {
-        email,
+        username,
         password: hashedPassword,
       },
     });
@@ -23,10 +23,10 @@ export const signup = async (req: Request, res: Response) => {
 
 
 export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
   try {
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { username } });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
