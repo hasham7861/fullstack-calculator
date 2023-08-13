@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import authRoutes from './routes/authRoutes';
 import { errorHandler } from './middlewares/errorHandler';
 import session from 'express-session';
+import MongoSessionStore from './utils/mongo-session-store';
 
 const PORT = process.env.PORT || 3000;
 
@@ -25,13 +26,17 @@ export default class Server {
   }
 
   private initializeMiddlewares() {
-    this.app.use(cors());
-    this.app.use(bodyParser.json());
     this.app.use(session({
       secret: process.env.SESSION_SECRET_KEY!,
       resave: false,
       saveUninitialized: false,
+      store: MongoSessionStore
     }));
+    this.app.use(cors({
+      origin: 'http://localhost:5173', // FIXME: have a dynamic cors origin
+      credentials: true
+    }));
+    this.app.use(bodyParser.json());
   }
 
   private initializeRoutes() {

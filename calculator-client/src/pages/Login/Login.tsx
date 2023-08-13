@@ -22,7 +22,11 @@ function Login() {
   const onClickHandleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/login`, { username, password });
+      // TODO: create an interface/ client to talk with the backend
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/login`, 
+      { username, password },
+      { withCredentials: true }
+      );
       console.log(response.data.message);
       loginAndRedirect()
     } catch (error) {
@@ -32,7 +36,9 @@ function Login() {
   const onClickHandleSignUp = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/signup`, { username, password });
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/signup`,
+      { username, password },
+      { withCredentials: true });
       console.log(response.data.message);
       loginAndRedirect()
     } catch (error) {
