@@ -10,7 +10,7 @@ function Login() {
   const onClickHandleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/login`, { email, password });
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/login`, { email, password });
       console.log(response.data.message);
     } catch (error) {
       console.error('Login error:', error);
@@ -19,7 +19,7 @@ function Login() {
   const onClickHandleSignUp = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/signup`, { email, password });
+      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/signup`, { email, password });
       console.log(response.data.message);
     } catch (error) {
       console.error('Signup error:', error);
