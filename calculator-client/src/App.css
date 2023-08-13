@@ -40,3 +40,12 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li {
     }
   }
   
+
+
+.app-container {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(120deg, #ffb74d, #d32f2f);
+  position: relative;
+  overflow: hidden;
+}
