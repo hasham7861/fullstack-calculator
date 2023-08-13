@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import BackendClient from '../../clients/backend-client';
+import BackendClient from '../../lib/backend-client';
 
 function Login() {
   
@@ -18,6 +18,8 @@ function Login() {
     setUserLoggedIn(username)
     login()
     navigate('/');
+    // TODO: also replace the localstorage history with the user's history of expressions
+    // when a new calculation happen add it to the history and the user history
   }
 
   const onClickHandleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "prisma:generate": "npx prisma generate"
+    "update-prisma-typing": "npx prisma generate",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
   },
   "keywords": [],
   "author": "",

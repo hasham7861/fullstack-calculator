@@ -2,7 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 import './Navbar.css';
 import { useAppContext } from '../../context/AppContext';
 import { toast } from '../toast/Toast';
-import BackendClient from '../../clients/backend-client';
+import BackendClient from '../../lib/backend-client';
 
 function Navbar() {
 

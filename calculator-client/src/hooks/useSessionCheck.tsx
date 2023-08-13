@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
 import { toast } from "../components/toast/Toast";
-import BackendClient from "../clients/backend-client";
+import BackendClient from "../lib/backend-client";
 
 function useSessionCheck() {
   const { isLoggedIn, setUserLoggedIn, login } = useAppContext();
