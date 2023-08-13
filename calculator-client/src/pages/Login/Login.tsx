@@ -46,7 +46,7 @@ function Login() {
     }
   };
   return (
-    <div>
+    <div className='login-wrapper'>
       <div className="login-form-container">
         <h2>Login / Sign up</h2>
         <form className="login-form">

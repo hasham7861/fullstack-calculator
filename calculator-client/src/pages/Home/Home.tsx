@@ -9,8 +9,10 @@ function Home() {
   const [calculationsHistory, setCalculationsHistory] = useState<string[]>(calculationStore.getStoredExpressions())
   return (
     <div className="home-page">
-      <Calculator calculationStore={calculationStore} setCalculationsHistory={setCalculationsHistory} />
-      <CalculatorExpressionsHistory calculationsHistory={calculationsHistory}/>
+      <div className="calculator-container">
+        <Calculator calculationStore={calculationStore} setCalculationsHistory={setCalculationsHistory} />
+        <CalculatorExpressionsHistory calculationsHistory={calculationsHistory}/>
+      </div>
     </div>
   );
 }
