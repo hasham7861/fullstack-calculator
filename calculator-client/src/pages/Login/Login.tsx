@@ -1,8 +1,9 @@
-import axios from 'axios';
 import './Login.css'
 import { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import BackendClient from '../../clients/backend-client';
 
 function Login() {
   
@@ -22,21 +23,26 @@ function Login() {
   const onClickHandleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/login`, { username, password });
-      console.log(response.data.message);
+      const response = await BackendClient.post('/auth/login', 
+      { username, password },
+      { withCredentials: true }
+      );
       loginAndRedirect()
+      toast.success(response.data.message);
     } catch (error) {
-      console.error('Login error:', error);
+      toast.error(`Login error ${error}`);
     }
   };
   const onClickHandleSignUp = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/signup`, { username, password });
-      console.log(response.data.message);
+      const response = await BackendClient.post('/auth/signup',
+      { username, password },
+      { withCredentials: true });
       loginAndRedirect()
+      toast.success(response.data.message);
     } catch (error) {
-      console.error('Signup error:', error);
+      toast.error(`Sign up error: ${error}`);
     }
   };
   return (

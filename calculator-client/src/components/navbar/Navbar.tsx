@@ -1,13 +1,22 @@
 import { Link, Outlet } from 'react-router-dom';
 import './Navbar.css';
 import { useAppContext } from '../../context/AppContext';
+import { toast } from '../toast/Toast';
+import BackendClient from '../../clients/backend-client';
 
 function Navbar() {
 
   const {isLoggedIn, logout, userLoggedIn} = useAppContext();
 
   const handleLogout = () => {
-    logout();
+    BackendClient.post('/auth/logout', null)
+    .then(response => {
+      logout();
+      toast.success(response.data.message);
+    })
+    .catch(error => {
+      toast.error(`Error logging out ${error.message}`);
+    });
   };
 
   return (
