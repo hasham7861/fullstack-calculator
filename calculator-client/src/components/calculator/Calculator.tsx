@@ -80,14 +80,14 @@ export const Calculator = () => {
   return (
     <div className="calculator">
       <input type="text" value={input} readOnly />
+      <div className="history-buttons">
+        <button onClick={handlePrev}>Prev</button>
+        <button onClick={handleNext}>Next</button>
+      </div>
       <div className="input-buttons">
         <button onClick={handleClearInput}>Ac</button>
         <button onClick={handleRedo}>Del</button>
         <button onClick={handleCalculate}>=</button>
-      </div>
-      <div className="history-buttons">
-        <button onClick={handlePrev}>Prev</button>
-        <button onClick={handleNext}>Next</button>
       </div>
       <div className="buttons">
         {
