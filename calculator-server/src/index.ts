@@ -2,11 +2,13 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+const cors = require('cors');
 
 const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.post('/signup', async (req, res) => {

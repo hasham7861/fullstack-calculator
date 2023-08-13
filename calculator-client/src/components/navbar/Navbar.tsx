@@ -5,10 +5,9 @@ import './Navbar.css';
 function Navbar() {
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const handleLogin = () => {
-
-    setLoggedIn(true);
-  };
+  // const handleLogin = () => {
+  //   setLoggedIn(true);
+  // };
 
   const handleLogout = () => {
 
@@ -28,7 +27,7 @@ function Navbar() {
           </>
         ) : (
           <>
-            <li><Link to="/login">Login/Signup</Link></li>
+            <li><Link to="/login">Login / Sign up</Link></li>
           </>
         )}
       </ul>
