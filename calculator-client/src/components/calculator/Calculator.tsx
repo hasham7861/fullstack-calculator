@@ -44,7 +44,7 @@ export const Calculator = (
       setInput(calculatedResult.toString())
       calculationStore.setItem(input)
       calculationStore.resetCursorToLastPosition()
-      // TODO: somehow the state of expressions history is notified that a new item is added
+      // FIXME: to add support for syncing with user account
       setCalculationsHistory((prevHistory) => [...prevHistory, input])
     } catch (error) {
       setInput('Error')

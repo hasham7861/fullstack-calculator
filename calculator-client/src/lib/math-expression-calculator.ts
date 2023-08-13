@@ -38,6 +38,7 @@ function infixToPostfix(tokens: RegExpMatchArray | null): string [] {
     if (isNumber(String(token))) {
       outputQueue.push(token);
     } else if (token in operators) {
+      // take care of all the operators with higher precedence first and then process current token after
       while (
         operatorStack.length &&
         operators[operatorStack[operatorStack.length - 1] as OperatorType] >= operators[token as OperatorType]
@@ -49,6 +50,7 @@ function infixToPostfix(tokens: RegExpMatchArray | null): string [] {
     } else if (token === '(') {
       operatorStack.push(token);
     } else if (token === ')') {
+      // put everything in brackets right away to RPN notation
       while (operatorStack.length && operatorStack[operatorStack.length - 1] !== '(') {
         const top = operatorStack.pop()
         top !== undefined  && outputQueue.push(top)
