@@ -1,17 +1,30 @@
 import axios from 'axios';
 import './Login.css'
 import { useState } from 'react';
+import { useAppContext } from '../../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const {setEmailOfUserLoggedIn, login} = useAppContext()
+  const navigate = useNavigate();
+
+
+  const loginAndRedirect = () => {
+    setEmailOfUserLoggedIn(email)
+    login()
+    navigate('/');
+  }
+
   const onClickHandleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     try {
       const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/login`, { email, password });
       console.log(response.data.message);
+      loginAndRedirect()
     } catch (error) {
       console.error('Login error:', error);
     }
@@ -21,6 +34,7 @@ function Login() {
     try {
       const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/signup`, { email, password });
       console.log(response.data.message);
+      loginAndRedirect()
     } catch (error) {
       console.error('Signup error:', error);
     }

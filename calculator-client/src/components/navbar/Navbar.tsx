@@ -1,38 +1,46 @@
-import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import './Navbar.css';
+import { useAppContext } from '../../context/AppContext';
 
 function Navbar() {
-  const [loggedIn, setLoggedIn] = useState(false);
 
-  // const handleLogin = () => {
-  //   setLoggedIn(true);
-  // };
+  const {isLoggedIn, logout, emailOfUserLoggedIn} = useAppContext();
 
   const handleLogout = () => {
-
-    setLoggedIn(false);
+    logout();
   };
 
   return (
     <>
-
-    <nav>
-      <ul>
-        <li><Link to="/">Home</Link></li>
-        {loggedIn ? (
-          <>
-            <li><Link to="/profile">Profile</Link></li>
-            <li><button onClick={handleLogout}>Logout</button></li>
-          </>
-        ) : (
-          <>
-            <li><Link to="/login">Login / Sign up</Link></li>
-          </>
-        )}
-      </ul>
-    </nav>
-    <Outlet/>
+      <div className='navbar'>
+        <ul>
+          <li>
+            <Link to="/" className="nav-link">
+              <div className="logo-and-title">
+                <div className="logo">
+                  <div className="circle"></div>
+                </div>
+                <span className="app-title">Calculator App</span>
+              </div>
+            </Link>
+          </li>
+          {isLoggedIn ? (
+            <li className="user-info">
+              <p>{emailOfUserLoggedIn}</p>
+              <button onClick={handleLogout} className="user-icon">
+                🙋‍♂️
+              </button>
+            </li>
+          ) : (
+            <li>
+              <Link to="/login" className="nav-link">
+                Login / Sign up
+              </Link>
+            </li>
+          )}
+        </ul>
+      </div>
+      <Outlet />
     </>
   );
 }
