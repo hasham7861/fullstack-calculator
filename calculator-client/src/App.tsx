@@ -1,12 +1,35 @@
-import { Calculator } from "./components"
+import Navbar from "./components/navbar/Navbar";
+import ErrorPage from "./pages/Error";
+import Home from "./pages/Home/Home"
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import Login from "./pages/Login";
+import './App.css'
+
+const router = createBrowserRouter([
+  {
+    
+    element: <Navbar/>,
+    children: [
+      {
+        path: "/",
+        element: <Home/>,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "/login",
+        element: <Login/>
+      }
+    ]
+  }
+]);
 
 function App() {
 
   return (
-    <div>
-      <h2>The Calculator App</h2>
-      <Calculator></Calculator>
-    </div>
+    <RouterProvider router={router} />
   )
 }
 
