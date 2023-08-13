@@ -67,3 +67,13 @@ export const sessionActivity = async (req: Request, res: Response) => {
     res.json({ authenticated: false });
   }
 }
+
+export const logout = async (req: Request, res: Response) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).json({ message: 'An error occurred.' });
+    }
+    res.clearCookie('connect.sid');
+    res.json({ message: 'Logout successful.' });
+  });
+}

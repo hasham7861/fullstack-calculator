@@ -1,13 +1,22 @@
 import { Link, Outlet } from 'react-router-dom';
 import './Navbar.css';
 import { useAppContext } from '../../context/AppContext';
+import axios from 'axios';
+import { toast } from '../toast/Toast';
 
 function Navbar() {
 
   const {isLoggedIn, logout, userLoggedIn} = useAppContext();
 
   const handleLogout = () => {
-    logout();
+    axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/logout`, null, { withCredentials: true })
+    .then(response => {
+      logout();
+      toast.success(response.data.message);
+    })
+    .catch(error => {
+      toast.error(`Error logging out ${error.message}`);
+    });
   };
 
   return (

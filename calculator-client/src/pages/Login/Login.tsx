@@ -3,6 +3,7 @@ import './Login.css'
 import { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Login() {
   
@@ -27,10 +28,10 @@ function Login() {
       { username, password },
       { withCredentials: true }
       );
-      console.log(response.data.message);
       loginAndRedirect()
+      toast.success(response.data.message);
     } catch (error) {
-      console.error('Login error:', error);
+      toast.error(`Login error ${error}`);
     }
   };
   const onClickHandleSignUp = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -39,10 +40,10 @@ function Login() {
       const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/auth/signup`,
       { username, password },
       { withCredentials: true });
-      console.log(response.data.message);
       loginAndRedirect()
+      toast.success(response.data.message);
     } catch (error) {
-      console.error('Signup error:', error);
+      toast.error(`Sign up error: ${error}`);
     }
   };
   return (

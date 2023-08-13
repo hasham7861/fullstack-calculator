@@ -7,6 +7,8 @@ import {
 } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import './App.css'
+import { ToastWrapper } from "./components/toast/Toast";
+import useSessionCheck from "./hooks/useSessionCheck";
 
 const router = createBrowserRouter([
   {
@@ -28,8 +30,13 @@ const router = createBrowserRouter([
 
 function App() {
 
+  useSessionCheck();
+
   return (
+    <>
+    <ToastWrapper/>
     <RouterProvider router={router} />
+    </>
   )
 }
 
