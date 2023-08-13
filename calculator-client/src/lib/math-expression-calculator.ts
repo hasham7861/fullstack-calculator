@@ -19,7 +19,7 @@ const operators: Record<OperatorType, OperatorPrecedence> = {
 };
 
 const isNumber = (input: string): boolean => {
-  // This regex assumes we already extract the + or minus sign away from number
+  // check if token string is a valid number including + and - sign
   const numberPattern = /^-?\d+(\.\d+)?$/;
   return numberPattern.test(input);
 };
