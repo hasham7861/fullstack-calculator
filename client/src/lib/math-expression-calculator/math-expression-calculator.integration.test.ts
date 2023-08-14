@@ -66,7 +66,7 @@ describe("mathCalculate: math expressions evaluator", () => {
     test("√(9) + 2^2 + 5%2 should be 8", () => {
       expect(mathCalculate("√(9) + 2^2 + 5%2")).toBe(8);
     });
-    // Weird Edge Cases
+    // Weird Edge Cases because of how I implemented the square root
     test("5√144 should be 60", () => {
       expect(mathCalculate("5√144")).toBe(60);
     });
