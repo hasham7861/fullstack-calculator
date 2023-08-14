@@ -180,7 +180,7 @@ export default function mathCalculate(input: string): number {
 //     ['2^3 * 4 + √(100+44) ^ 2 - 10%3', 175],
 //     ['2^3 * 4 + √(100+44+2+1) ^ 2 - 10%3', 178], // Multiple things in sqrt brackets support
 //     ['5√144', 60], // edge case when there is nothing before the sqrt root and it should add * before it
-//     ['4+-5' , -1] // edge case to handle +- right next to each other
+//     ['4+-5' , -1], // edge case to handle +- right next to each other
 //     ['0*3', 0] // edge case to handle 0*3
 //   ];
 
