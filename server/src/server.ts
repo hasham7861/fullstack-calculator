@@ -1,12 +1,15 @@
 import express, {Application} from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import authRoutes from './routes/authRoutes';
-import { errorHandler } from './middlewares/errorHandler';
 import session from 'express-session';
 import MongoSessionStore from './utils/mongo-session-store';
+import authRoutes from './routes/authRoutes';
+import mathExpressionsHistoryRoutes from './routes/mathExpressionsHistoryRoutes';
+import { errorHandler } from './middlewares/errorHandler';
+import initMongoDBConnection from './utils/mongoose-client';
 
 const PORT = process.env.PORT || 3000;
+require('dotenv').config()
 
 export default class Server {
   private static instance: Server;
@@ -16,6 +19,7 @@ export default class Server {
     this.app = express();
     this.initializeMiddlewares();
     this.initializeRoutes();
+    initMongoDBConnection();
   }
 
   public static getInstance(): Server {
@@ -41,6 +45,7 @@ export default class Server {
 
   private initializeRoutes() {
     this.app.use('/auth', authRoutes);
+    this.app.use('/math', mathExpressionsHistoryRoutes);
     this.app.use(errorHandler);
   }
 

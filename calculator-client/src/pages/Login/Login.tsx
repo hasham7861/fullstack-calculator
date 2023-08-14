@@ -20,6 +20,7 @@ function Login() {
     navigate('/');
     // TODO: also replace the localstorage history with the user's history of expressions
     // when a new calculation happen add it to the history and the user history
+    BackendClient.get('/math/fetch-history').then(data=>console.log('test', data))
   }
 
   const onClickHandleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
