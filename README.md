@@ -19,5 +19,10 @@
 - The app is now being hosted on http://localhost:5173
 - Voilà! 🎉 Now you can see the beautiful calculator – not just any calculator, but a special one. You'll need to fidget around with it and read the design doc to discover all the cool features of this calculator.
 
+## Link to Design Doc
+
+[Click me to view Design Doc](DesignDoc.md)
+
 ## Video Setup + Walkthrough
 - [Click me to view](https://youtu.be/58JoLP19FJQ)
+

@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const MONGO_URI = 'mongodb://localhost:27017/FullStackCalculator';
-console.log('MONGO_URI', MONGO_URI);
+const MONGO_URI = process.env.DATABASE_URL! || 'mongodb://localhost:27017/FullStackCalculator';
+
 export default async function initMongoDBConnection () {
   await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
