@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import { CalculationsHistoryStore } from '../lib/browser-local-storage';
 
 interface AppContextProps {
   isLoggedIn: boolean;
@@ -6,7 +7,12 @@ interface AppContextProps {
   setUserLoggedIn: React.Dispatch<React.SetStateAction<string>>;
   login: () => void;
   logout: () => void;
+  calculationsHistory: string[];
+  setCalculationsHistory: React.Dispatch<React.SetStateAction<string[]>>;
+  calculationStore: CalculationsHistoryStore;
 }
+
+const calculationStore = new CalculationsHistoryStore()
 
 const AppContext = createContext<AppContextProps | undefined>(undefined);
 
@@ -22,6 +28,7 @@ export function useAppContext(): AppContextProps {
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userLoggedIn, setUserLoggedIn] = useState<string>('');
+  const [calculationsHistory, setCalculationsHistory] = useState<string[]>([])
 
   const login = () => {
     setIsLoggedIn(true);
@@ -37,6 +44,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     logout,
     userLoggedIn,
     setUserLoggedIn,
+    calculationsHistory,
+    setCalculationsHistory,
+    calculationStore
   };
 
   return (<AppContext.Provider value={contextValue}>

@@ -10,17 +10,25 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const {setUserLoggedIn, login} = useAppContext()
+  const {setUserLoggedIn, login, setCalculationsHistory, calculationStore} = useAppContext()
   const navigate = useNavigate();
 
-
-  const loginAndRedirect = () => {
+  const syncLocalStorageWithLoggedInHistory = async () => {
+    try {
+      const fetchedHistory = await BackendClient.get('/math/fetch-history')
+      setCalculationsHistory(fetchedHistory.data)
+      calculationStore.setStoredExpressions(fetchedHistory.data)
+    } catch (error) {
+      setCalculationsHistory([])
+      calculationStore.setStoredExpressions()
+    }
+  }
+  const loginAndRedirect = async () => {
     setUserLoggedIn(username)
     login()
+    await syncLocalStorageWithLoggedInHistory()
     navigate('/');
-    // TODO: also replace the localstorage history with the user's history of expressions
-    // when a new calculation happen add it to the history and the user history
-    BackendClient.get('/math/fetch-history').then(data=>console.log('test', data))
+
   }
 
   const onClickHandleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -28,7 +36,6 @@ function Login() {
     try {
       const response = await BackendClient.post('/auth/login', 
       { username, password },
-      { withCredentials: true }
       );
       loginAndRedirect()
       toast.success(response.data.message);
@@ -40,8 +47,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await BackendClient.post('/auth/signup',
-      { username, password },
-      { withCredentials: true });
+      { username, password });
       loginAndRedirect()
       toast.success(response.data.message);
     } catch (error) {

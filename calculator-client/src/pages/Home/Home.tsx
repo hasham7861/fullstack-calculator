@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { Calculator, CalculatorExpressionsHistory } from "../../components";
-import { CalculationsHistoryStore } from "../../lib/browser-local-storage";
 import "./Home.css";
+import { useAppContext } from "../../context/AppContext";
 
-const calculationStore = new CalculationsHistoryStore()
 
 function Home() {
-  const [calculationsHistory, setCalculationsHistory] = useState<string[]>(calculationStore.getStoredExpressions())
+  const {calculationsHistory, setCalculationsHistory, calculationStore} = useAppContext()
+  
+  useEffect(() => {
+    setCalculationsHistory(calculationStore.getStoredExpressions())
+  }, [setCalculationsHistory])
+
   return (
     <div className="home-page">
       <div className="calculator-container">
-        <Calculator calculationStore={calculationStore} setCalculationsHistory={setCalculationsHistory} />
+        <Calculator />
         <CalculatorExpressionsHistory calculationsHistory={calculationsHistory}/>
       </div>
     </div>

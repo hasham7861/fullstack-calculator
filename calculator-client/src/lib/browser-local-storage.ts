@@ -41,6 +41,10 @@ class CalculationsHistoryStore extends LocalStorage {
         return super.getItem(this.EXPRESSIONS_HISTORY) || []
     }
 
+    public setStoredExpressions(expressions: string[] = []) {
+        super.setItem(this.EXPRESSIONS_HISTORY,expressions)
+    }
+
     private getCursorLastIndex(): number {
         const store = this.getStoredExpressions()
         return store.length -1

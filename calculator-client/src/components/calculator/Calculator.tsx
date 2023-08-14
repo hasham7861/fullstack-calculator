@@ -2,7 +2,9 @@ import { useState } from "react";
 
 import './Calculator.css';
 import mathCalculate from "../../lib/math-expression-calculator";
-import { CalculationsHistoryStore } from "../../lib/browser-local-storage";
+import BackendClient from "../../lib/backend-client";
+import { useAppContext } from "../../context/AppContext";
+import { toast } from "../toast/Toast";
 
 const buttonsSchema = [
   ['1', '2', '3', '+'],
@@ -19,18 +21,12 @@ const evaluateMathExpression = (expression: string): number => {
 
 }
 
-interface IProps {
-  calculationStore: CalculationsHistoryStore
-  setCalculationsHistory: React.Dispatch<React.SetStateAction<string[]>>
-}
-export const Calculator = (
-  {
-    calculationStore, 
-    setCalculationsHistory
-  }: IProps) => {
+
+export const Calculator = () => {
 
   const [input, setInput] = useState('');
   const [memoryFunctionState, setMemoryFunctionState] = useState(0);
+  const { isLoggedIn, calculationStore, setCalculationsHistory } = useAppContext();
 
   const handleButtonClick = (value: string) => {
     setInput((prevInput) => {
@@ -38,14 +34,31 @@ export const Calculator = (
     });
   };
 
-  const handleCalculate = () => {
+  const addExpressionToUserHistoryAndSyncWithLocalStorage = async () => {
+    await BackendClient.post('/math/add-expression', { expression: input })
+    try { 
+      const response = await BackendClient.get('/math/fetch-history')
+      const data: string[] = response.data
+
+      calculationStore.setStoredExpressions(data)
+      setCalculationsHistory(data)
+    } catch(err) {
+      toast.error('Error while adding expression to logged in user-history')
+    }
+  }
+
+  const handleCalculate = async () => {
     try {
       const calculatedResult = evaluateMathExpression(input);
       setInput(calculatedResult.toString())
       calculationStore.setItem(input)
       calculationStore.resetCursorToLastPosition()
-      // FIXME: to add support for syncing with user account
-      setCalculationsHistory((prevHistory) => [...prevHistory, input])
+
+      if(isLoggedIn) {
+        await addExpressionToUserHistoryAndSyncWithLocalStorage()
+      } else{
+        setCalculationsHistory((prevHistory) => [...prevHistory, input])
+      }
     } catch (error) {
       setInput('Error')
     }

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { MathExpressionsHistory } from '../entities/mathExpressionsHistory.entity'
+import { Types } from 'mongoose';
 
 export const fetchHistory = async (req: Request, res: Response) => {
   
@@ -25,21 +26,22 @@ export const fetchHistory = async (req: Request, res: Response) => {
 export const addExpression = async (req: Request, res: Response) => {
   const userId = req.session.userId;
   const newExpression = req.body.expression;
-  
+
   try {
-    const userHistory = await MathExpressionsHistory.findOne({ userId });
-  
+    const userIdObjectId = new Types.ObjectId(userId);
+    let userHistory = await MathExpressionsHistory.findOne({ userId: userIdObjectId });
+
     if (!userHistory) {
-      return res.status(404).json({ message: 'User exists but no calculations were found.' });
+      await MathExpressionsHistory.create({ userId: userId, history: [newExpression] });
+    } else {
+
+      const updatedHistory = [...userHistory.history, newExpression];
+      await MathExpressionsHistory.updateOne({ userId: userId }, { history: updatedHistory });
     }
-  
-    const updatedHistory = [...userHistory.history, newExpression];
-  
-    await MathExpressionsHistory.updateOne({ userId }, { history: updatedHistory });
-  
+
     return res.status(200).json({ message: 'Expression added successfully.' });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'An error occurred while adding the expression.' });
   }
-}
+};
