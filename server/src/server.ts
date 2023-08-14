@@ -11,6 +11,7 @@ import initMongoDBConnection from './utils/mongoose-client';
 const PORT = process.env.PORT || 3000;
 require('dotenv').config()
 
+const REQUEST_OF_ORIGIN_ALLOWED = 'http://localhost:5173'
 export default class Server {
   private static instance: Server;
   private app: Application;
@@ -37,7 +38,7 @@ export default class Server {
       store: MongoSessionStore
     }));
     this.app.use(cors({
-      origin: 'http://localhost:5173', // FIXME: have a dynamic cors origin
+      origin: REQUEST_OF_ORIGIN_ALLOWED,
       credentials: true
     }));
     this.app.use(bodyParser.json());
