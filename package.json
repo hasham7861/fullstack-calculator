@@ -2,7 +2,8 @@
   "scripts": {
     "database": "cd database && docker compose up -d",
     "server": "cd server && npm run dev",
-    "client": "cd client && npm run dev"
-
+    "client": "cd client && npm run dev",
+    "client:install": "cd client && npm install",
+    "server:install": "cd server && npm install"
   }
 }
