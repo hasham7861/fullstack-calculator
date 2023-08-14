@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import './Calculator.css';
-import mathCalculate from "../../lib/math-expression-calculator";
+import mathCalculate from "../../lib/math-expression-calculator/math-expression-calculator";
 import BackendClient from "../../lib/backend-client";
 import { useAppContext } from "../../context/AppContext";
 import { toast } from "../toast/Toast";
