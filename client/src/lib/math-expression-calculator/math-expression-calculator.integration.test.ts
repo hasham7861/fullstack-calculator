@@ -2,7 +2,7 @@ import mathCalculate from "./math-expression-calculator";
 
 describe("mathCalculate: math expressions evaluator", () => {
   describe("Basic Arithmetic Operations", () => {
-    // Weird Edge Cases
+    // Weird Edge Cases because how I checked the left and right tokens
     test("4+-5 should be -1", () => {
       expect(mathCalculate("4+-5")).toBe(-1);
     });
