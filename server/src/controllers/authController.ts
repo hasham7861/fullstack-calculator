@@ -19,7 +19,7 @@ export const signup = async (req: Request, res: Response) => {
       username,
       password: hashedPassword,
     })
-    console.log('User', user)
+
     await user.save();
     
     if (!req.session.username) {
@@ -39,7 +39,6 @@ export const login = async (req: Request, res: Response) => {
   try {
 
     const user = await User.findOne({ username  });
-    console.log('User', user)
 
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
