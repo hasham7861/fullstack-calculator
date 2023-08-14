@@ -3,21 +3,32 @@ import { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import BackendClient from '../../clients/backend-client';
+import BackendClient from '../../lib/backend-client';
 
 function Login() {
   
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const {setUserLoggedIn, login} = useAppContext()
+  const {setUserLoggedIn, login, setCalculationsHistory, calculationStore} = useAppContext()
   const navigate = useNavigate();
 
-
-  const loginAndRedirect = () => {
+  const syncLocalStorageWithLoggedInHistory = async () => {
+    try {
+      const fetchedHistory = await BackendClient.get('/math/fetch-history')
+      setCalculationsHistory(fetchedHistory.data)
+      calculationStore.setStoredExpressions(fetchedHistory.data)
+    } catch (error) {
+      setCalculationsHistory([])
+      calculationStore.setStoredExpressions()
+    }
+  }
+  const loginAndRedirect = async () => {
     setUserLoggedIn(username)
     login()
+    await syncLocalStorageWithLoggedInHistory()
     navigate('/');
+
   }
 
   const onClickHandleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -25,7 +36,6 @@ function Login() {
     try {
       const response = await BackendClient.post('/auth/login', 
       { username, password },
-      { withCredentials: true }
       );
       loginAndRedirect()
       toast.success(response.data.message);
@@ -37,8 +47,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await BackendClient.post('/auth/signup',
-      { username, password },
-      { withCredentials: true });
+      { username, password });
       loginAndRedirect()
       toast.success(response.data.message);
     } catch (error) {
@@ -46,7 +55,7 @@ function Login() {
     }
   };
   return (
-    <div>
+    <div className='login-wrapper'>
       <div className="login-form-container">
         <h2>Login / Sign up</h2>
         <form className="login-form">

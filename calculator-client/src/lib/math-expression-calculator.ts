@@ -35,9 +35,10 @@ function infixToPostfix(tokens: RegExpMatchArray | null): string [] {
   const operatorStack: string[] = [];
 
   for (const token of tokens) {
-    if (isNumber(token)) {
+    if (isNumber(String(token))) {
       outputQueue.push(token);
     } else if (token in operators) {
+      // take care of all the operators with higher precedence first and then process current token after
       while (
         operatorStack.length &&
         operators[operatorStack[operatorStack.length - 1] as OperatorType] >= operators[token as OperatorType]
@@ -49,6 +50,7 @@ function infixToPostfix(tokens: RegExpMatchArray | null): string [] {
     } else if (token === '(') {
       operatorStack.push(token);
     } else if (token === ')') {
+      // put everything in brackets right away to RPN notation
       while (operatorStack.length && operatorStack[operatorStack.length - 1] !== '(') {
         const top = operatorStack.pop()
         top !== undefined  && outputQueue.push(top)
@@ -72,7 +74,7 @@ function evaluatePostfix(postfixTokens: string[]): number {
   const stack: number[] = [];
 
   for (const token of postfixTokens) {
-    if (isNumber(token)) {
+    if (isNumber(String(token))) {
       stack.push(parseFloat(token));
     } else if (token in operators) {
       const right = stack.pop();
@@ -106,14 +108,14 @@ function evaluatePostfix(postfixTokens: string[]): number {
 
   const answer = stack.pop();
 
-  if (!answer) {
+  if (answer === undefined) {
     throw new Error("evaluatePostfix: unable to evaluate the RPN expression");
   }
 
   return answer;
 }
 
-function rebuildExpressionWithBracketsInFrontOfSqrt(
+function rebuildExpressionToHandleSqrtOperation(
   tokens: RegExpMatchArray | null
 ): RegExpMatchArray {
   if (!tokens) {
@@ -158,8 +160,7 @@ export default function mathCalculate(input: string): number {
     throw new Error("mathCalculate: No tokens found");
   }
 
-  const updatedTokens = rebuildExpressionWithBracketsInFrontOfSqrt(tokens);
-
+  const updatedTokens = rebuildExpressionToHandleSqrtOperation(tokens);
   const postfixTokens = infixToPostfix(updatedTokens);
   const result = evaluatePostfix(postfixTokens);
 
@@ -180,6 +181,7 @@ export default function mathCalculate(input: string): number {
 //     ['2^3 * 4 + √(100+44+2+1) ^ 2 - 10%3', 178], // Multiple things in sqrt brackets support
 //     ['5√144', 60], // edge case when there is nothing before the sqrt root and it should add * before it
 //     ['4+-5' , -1] // edge case to handle +- right next to each other
+//     ['0*3', 0] // edge case to handle 0*3
 //   ];
 
 // function test() {

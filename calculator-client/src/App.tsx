@@ -31,12 +31,13 @@ const router = createBrowserRouter([
 function App() {
 
   useSessionCheck();
+  
 
   return (
-    <>
-    <ToastWrapper/>
-    <RouterProvider router={router} />
-    </>
+    <div className="app-container ">
+      <ToastWrapper/>
+      <RouterProvider router={router} />
+    </div>
   )
 }
 

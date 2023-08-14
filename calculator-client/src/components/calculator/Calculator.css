@@ -4,6 +4,8 @@
   border-radius: 20px;
   background-color: #ffe066;
   text-align: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
 input {
@@ -79,4 +81,22 @@ input {
   height: 60px;
   margin: 5px;
   color: white;
+  transition: transform 0.2s;
+}
+
+
+.buttons button:hover,
+.input-buttons button:hover,
+.memory-buttons button:hover,
+.result button:hover,
+.history-buttons button:hover {
+  transform: scale(1.1);
+}
+
+.buttons button:active,
+.input-buttons button:active,
+.memory-buttons button:active,
+.result button:active,
+.history-buttons button:active {
+  transform: scale(0.9);
 }

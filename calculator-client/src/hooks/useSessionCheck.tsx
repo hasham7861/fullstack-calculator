@@ -1,15 +1,15 @@
-import { useEffect } from "react";
 import { useAppContext } from "../context/AppContext";
 import { toast } from "../components/toast/Toast";
-import BackendClient from "../clients/backend-client";
+import BackendClient from "../lib/backend-client";
+import { useEffect } from "react";
 
 function useSessionCheck() {
-  const { isLoggedIn, setUserLoggedIn, login } = useAppContext();
+  const { setUserLoggedIn, login } = useAppContext();
 
   useEffect(() => {
     BackendClient.get(`/auth/session-activity`)
       .then(response => {
-        if (response.data.authenticated && !isLoggedIn) {
+        if (response.data.authenticated) {
           login();
           setUserLoggedIn(response.data.username);
         }
@@ -17,7 +17,8 @@ function useSessionCheck() {
       .catch(error => {
         toast.error(`Error fetching session status ${error.message}!`)
       });
-  }, [isLoggedIn, login, setUserLoggedIn]);
+  }, []);
+ 
 }
 
 export default useSessionCheck;

@@ -1,13 +1,17 @@
 import express, {Application} from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import authRoutes from './routes/authRoutes';
-import { errorHandler } from './middlewares/errorHandler';
 import session from 'express-session';
 import MongoSessionStore from './utils/mongo-session-store';
+import authRoutes from './routes/authRoutes';
+import mathExpressionsHistoryRoutes from './routes/mathExpressionsHistoryRoutes';
+import { errorHandler } from './middlewares/errorHandler';
+import initMongoDBConnection from './utils/mongoose-client';
 
 const PORT = process.env.PORT || 3000;
+require('dotenv').config()
 
+const REQUEST_OF_ORIGIN_ALLOWED = 'http://localhost:5173'
 export default class Server {
   private static instance: Server;
   private app: Application;
@@ -16,6 +20,7 @@ export default class Server {
     this.app = express();
     this.initializeMiddlewares();
     this.initializeRoutes();
+    initMongoDBConnection();
   }
 
   public static getInstance(): Server {
@@ -33,7 +38,7 @@ export default class Server {
       store: MongoSessionStore
     }));
     this.app.use(cors({
-      origin: 'http://localhost:5173', // FIXME: have a dynamic cors origin
+      origin: REQUEST_OF_ORIGIN_ALLOWED,
       credentials: true
     }));
     this.app.use(bodyParser.json());
@@ -41,6 +46,7 @@ export default class Server {
 
   private initializeRoutes() {
     this.app.use('/auth', authRoutes);
+    this.app.use('/math', mathExpressionsHistoryRoutes);
     this.app.use(errorHandler);
   }
 
