@@ -167,7 +167,6 @@ export default function mathCalculate(input: string): number {
   return result;
 }
 
-// There is a limit on sqrt as there is no nesting in there
 // const testCases = [
 //     ['2 + √(25) + 2^3 - 10%3', 14],
 //     ['√(9) + 2^2 + 5%2', 8],
