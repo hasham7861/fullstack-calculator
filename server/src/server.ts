@@ -7,11 +7,13 @@ import authRoutes from './routes/authRoutes';
 import mathExpressionsHistoryRoutes from './routes/mathExpressionsHistoryRoutes';
 import { errorHandler } from './middlewares/errorHandler';
 import initMongoDBConnection from './utils/mongoose-client';
+import healthRoutes from './routes/healthRoutes';
 
-const PORT = process.env.PORT || 3000;
 require('dotenv').config()
 
-const REQUEST_OF_ORIGIN_ALLOWED = 'http://localhost:5173'
+const PORT = process.env.PORT || 3000;
+
+const REQUEST_OF_ORIGIN_ALLOWED = process.env.CLIENT_URL
 export default class Server {
   private static instance: Server;
   private app: Application;
@@ -45,6 +47,7 @@ export default class Server {
   }
 
   private initializeRoutes() {
+    this.app.use('/health', healthRoutes);
     this.app.use('/auth', authRoutes);
     this.app.use('/math', mathExpressionsHistoryRoutes);
     this.app.use(errorHandler);
