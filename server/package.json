@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "update-prisma-typing": "npx prisma generate",
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "deploy": "flyctl deploy"
   },
   "keywords": [],
   "author": "",

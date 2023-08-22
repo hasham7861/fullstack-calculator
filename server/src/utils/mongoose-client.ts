@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { ConnectOptions } from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -8,7 +8,7 @@ export default async function initMongoDBConnection () {
   await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-  });
+  } as ConnectOptions);
   
   mongoose.connection.on('connected', () => {
       console.log('MongoDB connection established');
