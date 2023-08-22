@@ -48,6 +48,9 @@ describe("mathCalculate: math expressions evaluator", () => {
   });
 
   describe("Subtraction", () => {
+    test("2 - 3 should be -1", () => {
+      expect(mathCalculate("2 - 3")).toBe(-1)
+    })
     test("10 - 3 * 2 should be 4", () => {
       expect(mathCalculate("10 - 3 * 2")).toBe(4);
     });

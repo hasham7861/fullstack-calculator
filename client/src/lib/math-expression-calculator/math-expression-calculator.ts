@@ -24,7 +24,7 @@ const isNumber = (input: string): boolean => {
   return numberPattern.test(input);
 };
 
-const DIGITS_AND_OPERATORS_REGEX = /(\d+(\.\d+)?|-\d+(\.\d+)?|\+|-|\*|\/|\^|%|√|\(|\))/g;
+const DIGITS_AND_OPERATORS_REGEX = /(\d+(\.\d+)?|[-+]|\*|\/|\^|%|√|\(|\))/g;
 
 // Inspired by Reverse Polish Notation (RPN), but handles brackets as well
 function infixToPostfix(tokens: RegExpMatchArray | null): string [] {
@@ -153,13 +153,13 @@ function rebuildExpressionToHandleSqrtOperation(
   return newTokens as RegExpMatchArray;
 }
 
+// Handles edge case with subtraction example: 4+-2 will be 2
+function rebuildExpressionToHandleSubtractOperationEdgeCase(tokens: string){
+  return tokens.replace(/([+-])-/g, "$10-");
+}
 export default function mathCalculate(input: string): number {
-  const tokens = input.match(DIGITS_AND_OPERATORS_REGEX);
-
-  if (!tokens) {
-    throw new Error("mathCalculate: No tokens found");
-  }
-
+  const sanitizeStringToHandleMinusSignEdgeCase = rebuildExpressionToHandleSubtractOperationEdgeCase(input)  
+  const tokens = sanitizeStringToHandleMinusSignEdgeCase.match(DIGITS_AND_OPERATORS_REGEX);
   const updatedTokens = rebuildExpressionToHandleSqrtOperation(tokens);
   const postfixTokens = infixToPostfix(updatedTokens);
   const result = evaluatePostfix(postfixTokens);
