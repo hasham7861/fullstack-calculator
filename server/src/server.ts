@@ -33,14 +33,21 @@ export default class Server {
   }
 
   private initializeMiddlewares() {
+    this.app.set('trust proxy', 1);
     this.app.use(session({
       secret: process.env.SESSION_SECRET_KEY!,
       resave: false,
       saveUninitialized: false,
-      store: MongoSessionStore
+      store: MongoSessionStore,
+      cookie: {
+        secure: true,
+        httpOnly: true,
+        sameSite: 'none',
+      }
     }));
     this.app.use(cors({
       origin: REQUEST_OF_ORIGIN_ALLOWED,
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
       credentials: true
     }));
     this.app.use(bodyParser.json());
