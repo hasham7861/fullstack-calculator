@@ -32,15 +32,35 @@ export default class Server {
     return Server.instance;
   }
 
-  private initializeMiddlewares() {
-    this.app.use(session({
+  private setSessionConfig () {
+    const basicSessionConfig = {
       secret: process.env.SESSION_SECRET_KEY!,
       resave: false,
       saveUninitialized: false,
-      store: MongoSessionStore
-    }));
+      store: MongoSessionStore,
+    }
+
+    if(process.env.ENVIRONMENT !== "DEV"){
+      this.app.set('trust proxy', 1);
+      this.app.use(session({
+        ...basicSessionConfig,
+        cookie: {
+          secure: true,
+          httpOnly: true,
+          sameSite: 'none',
+        }
+      }));
+    }else {
+      this.app.use(session({
+        ...basicSessionConfig,
+      }));
+    }
+  }
+  private initializeMiddlewares() {
+    this.setSessionConfig()
     this.app.use(cors({
       origin: REQUEST_OF_ORIGIN_ALLOWED,
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
       credentials: true
     }));
     this.app.use(bodyParser.json());
