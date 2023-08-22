@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for fullstack-client on 2023-08-21T21:35:04-04:00
+# fly.toml app configuration file generated for calculator-front on 2023-08-22T09:32:17-04:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "fullstack-client"
+app = "calculator-front"
 primary_region = "yyz"
 
 [build]
