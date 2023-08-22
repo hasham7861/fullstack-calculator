@@ -19,7 +19,9 @@ jobs:
           node-version: 19.7.0
 
       - name: Install Dependencies
+        working-directory: client
         run: npm install
 
       - name: Run Jest Tests
+        working-directory: client
         run: npm test
