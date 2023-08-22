@@ -13,7 +13,7 @@ require('dotenv').config()
 
 const PORT = process.env.PORT || 3000;
 
-const REQUEST_OF_ORIGIN_ALLOWED = 'http://localhost:5173'
+const REQUEST_OF_ORIGIN_ALLOWED = process.env.CLIENT_URL
 export default class Server {
   private static instance: Server;
   private app: Application;
