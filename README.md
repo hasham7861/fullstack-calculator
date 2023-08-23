@@ -1,6 +1,8 @@
 # 🌟 Guide to using fullstack-calculator
 
-## Prerequisites to running the app
+[Project Link](calculator-front.fly.dev/)
+
+## Prerequisites to running the app locally
 
 - This project requires you to be in a linux environment either natively or through wsl
 - Make sure node v19.7.0 is installed as it is the defacto for client and server folders/apps
@@ -25,4 +27,5 @@
 
 ## Video Setup + Walkthrough
 - [Click me to view](https://youtu.be/58JoLP19FJQ)
+
 
