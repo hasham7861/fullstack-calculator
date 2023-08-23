@@ -1,6 +1,6 @@
 # 🌟 Guide to using fullstack-calculator
 
-[Project Link](calculator-front.fly.dev/)
+[Project Link](https://calculator-front.fly.dev/)
 
 ## Prerequisites to running the app locally
 
