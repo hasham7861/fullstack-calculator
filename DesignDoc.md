@@ -31,12 +31,9 @@
 - The tech stack I utilized includes React, Jest, Node, Express, Typescript, and MongoDB.
 - I developed the frontend using React and Typescript because they make it easy and quick to create performant components.
 - The frontend also houses the Math Expressions Evaluator, as it didn't make sense to place it on the backend for each calculation. Moreover, the frontend is powerful enough to support it.
-- I crafted the backend with Node, Express, Typescript, REST, and MongoDB. My inspiration came from recalling that Vial used Express with Typescript and REST. I opted for MongoDB not only because I didn't need a heavy relational database—just a simple connection mapping the history of expressions to users—but also because MongoDB was the most cost-effective option for hosting the app.
+- I crafted the backend with Node, Express, Typescript, REST, and MongoDB. I opted for MongoDB not only because I didn't need a heavy relational database—just a simple connection mapping the history of expressions to users—but also because MongoDB was the most cost-effective option for hosting the app.
 
-## Things I Planned to Add if Time Permitted
+#### Deployment Choices?
 
-- Implement continuous integration with GitHub Actions so that when a new PR is created, it cross-checks with tests before merging.
-- Deploy the frontend to Vercel.
-- Deploy the backend to Fly.io. I wanted to explore a new hosting provider, given that I already have experience with AWS and Heroku.
-- Incorporate continuous deployment using GitHub Actions.
-- Expand testing to achieve 100% test coverage.
+- Fly.io for frontend and backend
+- mongo atlas for the database hosting
